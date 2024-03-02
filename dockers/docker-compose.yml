@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+#  memoire:
+#    container_name: 'memoire-api'
+#    image: 'memoire-api:latest'
+#    build:
+#      context: .
+#    ports:
+#      - "8504:8091"
+#    networks:
+#      - memoire-api-network
+#    depends_on:
+#      - db-mysql
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://db-mysql:3306/construction
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: root
+#    links:
+#      - db-mysql
+  db-mysql:
+    image: 'mysql:latest'
+    container_name: 'dbmysqls'
+    restart: always
+    ports:
+      - "8886:3306"
+    environment:
+      MYSQL_DATABASE: Construction
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+        - db-data:/var/lib/mysql
+#  jenkins:
+#    image: "jenkins/jenkins:lts"
+#    container_name: "jenkins"
+#    ports:
+#      - "8180:8080"
+#      - "50000:50000"
+#    volumes:
+#      - jenkins-data:/var/jenkins_home
+#  sonarqube:
+#    image: "sonarqube:7.5-community" # Matches version of https://sonar.smogdev.co.uk/
+#    ports:
+#      - "9010:9000"
+#    networks:
+#      - sonarnet
+#    environment:
+#      - SONARQUBE_JDBC_URL=jdbc:mysql://db-mysql:3306/bibliotheque_bds?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
+#      - SONARQUBE_JDBC_USERNAME=root
+#      - SONARQUBE_JDBC_PASSWORD=root
+#    volumes:
+#      - sonarqube_conf:/opt/sonarqube/conf
+#      - sonarqube_data:/opt/sonarqube/data
+#      - sonarqube_extensions:/opt/sonarqube/extensions
+
+volumes:
+  db-data:
+#  jenkins-data:
+#  sonarqube_conf:
+#  sonarqube_data:
+#  sonarqube_extensions:
+#networks:
+#  memoire-api-network:
+#  sonarnet:
+#    driver: bridge
