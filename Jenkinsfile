@@ -5,8 +5,7 @@ pipeline {
         jdk 'jdk'
         // Utilisez Maven fourni par Jenkins
         maven 'maven'
-        // Utiliser Sonar par Jenkins
-        sonarqube 'sonar'
+        
     }
     
     stages {
