@@ -8,12 +8,7 @@ pipeline {
         // Utiliser Sonar par Jenkins
         sonarqube 'sonar'
     }
-    stage('Checkout') {
-            steps {
-                // Checkout du code depuis le référentiel Git
-                checkout scm
-            }
-        }
+    
     stages {
         stage('Clean') {
             steps {
