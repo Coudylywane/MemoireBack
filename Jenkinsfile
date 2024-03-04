@@ -5,6 +5,8 @@ pipeline {
         jdk 'jdk'
         // Utilisez Maven fourni par Jenkins
         maven 'maven'
+        // Utiliser Sonar par Jenkins
+        sonar 'sonar'
     }
     stages {
         stage('Clean') {
@@ -29,6 +31,12 @@ pipeline {
             steps {
                 // Construire le projet en utilisant Maven et ignorer les tests
                 sh 'mvn -B -DskipTests clean package'
+            }
+        }
+        stage('Analyse') {
+            steps {
+                // Executer une analyse de qualite par SonarQube
+                sh "mvn sonar:sonar"
             }
         }
     }
