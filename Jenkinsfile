@@ -34,10 +34,11 @@ pipeline {
             }
         }
         stage('Analyse') {
-            steps {
-                // Executer une analyse de qualite par SonarQube
-                sh "mvn -B sonar:sonar"
-            }
+           steps {
+                // Exécutez l'analyse SonarQube sur votre projet
+                withSonarQubeEnv('sonar') {
+                    sh 'mvn sonar:sonar'
+                }
         }
     }
 }
