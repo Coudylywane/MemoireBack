@@ -36,7 +36,7 @@ pipeline {
         stage('Analyse') {
             steps {
                 // Executer une analyse de qualite par SonarQube
-                sh "mvn sonar:sonar"
+                sh "mvn -B sonar:sonar"
             }
         }
     }
