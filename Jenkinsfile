@@ -6,7 +6,7 @@ pipeline {
         // Utilisez Maven fourni par Jenkins
         maven 'maven'
         // Utiliser Sonar par Jenkins
-        sonarqube 'SonarQubeScanner'
+        sonarqube 'sonar'
     }
     stages {
         stage('Clean') {
