@@ -33,13 +33,15 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Analyse') {
-           steps {
-                // Exécutez l'analyse SonarQube sur votre projet
-                withSonarQubeEnv('sonar') {
-                    sh 'mvn sonar:sonar'
+        stages {
+           stage('Analysis') {
+            steps {
+                // Execute quality analysis with SonarQube
+                withSonarQubeEnv('MySonarQube') {
+                    sh "mvn sonar:sonar"
                 }
-           }
+            }
+        }
         }
     }
 }
