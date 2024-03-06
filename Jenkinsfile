@@ -37,11 +37,12 @@ pipeline {
            stage('Analysis') {
             steps {
                 // Execute quality analysis with SonarQube
-                withSonarQubeEnv('sonar') {
+                //withSonarQubeEnv('sonar') {
                     sh "mvn sonar:sonar"
-                }
+               // }
             }
         }
+        
         
     }
 }
