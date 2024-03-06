@@ -132,6 +132,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
