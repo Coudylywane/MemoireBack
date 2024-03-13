@@ -1,47 +1,66 @@
 pipeline {
     agent any
     tools {
-        // Utilisez le JDK fourni par Jenkins
-        jdk 'jdk'
-        // Utilisez Maven fourni par Jenkins
-        maven 'maven'
-        
+        jdk 'jdk17'
+        maven 'maven3'
     }
-    
     stages {
-        stage('Clean') {
+        stage('clean workspace') {
             steps {
-                // Nettoyer le projet
-                sh 'mvn -B clean'
+                cleanWs()
             }
         }
-        stage('Test') {
+        stage('Checkout From Git') {
             steps {
-                // Exécuter les tests en utilisant Maven
+                git branch: 'main', url: 'https://github.com/babaly/javaApp-CICD.git'
+            }
+        }
+        stage('mvn compile') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        stage('mvn test') {
+            steps {
                 sh 'mvn test'
             }
-            post {
-                always {
-                    // Rapport des résultats de test JUnit
-                    junit allowEmptyResults: true, testResults: '*/test-results/*.xml'
-                }
-            }
         }
-        stage('Build') {
+        
+        /* Sonar Scanner */
+        
+        stage('mvn build') {
             steps {
-                // Construire le projet en utilisant Maven et ignorer les tests
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-           stage('Analysis') {
-            steps {
-                // Execute quality analysis with SonarQube
-                withSonarQubeEnv('sonar') {
-                    sh "mvn clean package sonar:sonar"
-                }
+                sh 'mvn clean install'
             }
         }
         
-        
+        /* Dependence Checks */
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        sh 'docker build -t spring-app .'
+                    }
+                }
+            }
+        }
+        stage('Clean up containers') {   //if container runs it will stop and remove this block
+            steps {
+                script {
+                    try {
+                        sh 'docker stop spring-container'
+                        sh 'docker rm spring-container'
+                } catch (Exception e) {
+                        echo 'Container spring-container not found, moving to next stage'
+                    }
+                }
+            }
+        }
+        stage('Deploy to conatainer') {
+            steps {
+                sh 'docker run -d --name spring-container -p 8082:8080 spring-app'
+            }
+        }
     }
 }
