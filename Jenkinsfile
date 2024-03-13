@@ -39,9 +39,7 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
-                        sh 'docker build -t spring-app ./dockers/Dockerfile'
-                    }
+                    sh 'docker build -t spring-app .'
                 }
             }
         }
