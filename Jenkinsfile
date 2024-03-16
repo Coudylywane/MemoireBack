@@ -4,6 +4,9 @@ pipeline {
         jdk 'jdk17'
         maven 'maven3'
     }
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
     stages {
         stage('clean workspace') {
             steps {
@@ -12,7 +15,7 @@ pipeline {
         }
         stage('Checkout From Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/babaly/javaApp-CICD.git'
+                git branch: 'main', url: 'https://github.com/Coudylywane/MemoireBack.git'
             }
         }
         stage('mvn compile') {
@@ -26,16 +29,33 @@ pipeline {
             }
         }
         
-        /* Sonar Scanner */
-        
+        stage('Sonarqube Analysis ') {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Pet-Clinic \
+                    -Dsonar.java.binaries=. \
+                    -Dsonar.projectKey=Petclinic '''
+                }
+            }
+        }
+        stage('quality gate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                }
+            }
+        }
         stage('mvn build') {
             steps {
                 sh 'mvn clean install'
             }
         }
-        
-        /* Dependence Checks */
-
+        stage('OWASP Dependency Check') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --format HTML ', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.html'
+            }
+        }
         stage('Docker Build & Push') {
             steps {
                 script {
