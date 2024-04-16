@@ -22,12 +22,8 @@ public class TypeArticle {
     private int status = 0;
 
 
-    @ManyToOne
-    @JoinColumn(name = "famille_id", referencedColumnName = "id")
-    private FamilleArticle familleArticle;
-
-    //Méthode pour la suppression logique
-    public void softDelete() {
-        this.status = 1;
+    //    // Méthode pour la suppression logique
+  public void softDelete() {
+       this.status = 1;
     }
 }

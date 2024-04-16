@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -23,5 +20,13 @@ public class Facture {
     private String prixTotal ;
     private String date;
 
-    
+    @ManyToOne
+    @JoinColumn(name = "commande", referencedColumnName = "id")
+    private Commande commande ;
+
+    @ManyToOne
+    @JoinColumn(name = "fournisseur", referencedColumnName = "id")
+    private Fournisseur fournisseur ;
+
+
 }

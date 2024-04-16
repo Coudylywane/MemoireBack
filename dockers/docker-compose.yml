@@ -37,28 +37,25 @@ services:
 #      - "50000:50000"
 #    volumes:
 #      - jenkins-data:/var/jenkins_home
-#  sonarqube:
-#    image: "sonarqube:7.5-community" # Matches version of https://sonar.smogdev.co.uk/
-#    ports:
-#      - "9010:9000"
-#    networks:
-#      - sonarnet
-#    environment:
-#      - SONARQUBE_JDBC_URL=jdbc:mysql://db-mysql:3306/bibliotheque_bds?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
-#      - SONARQUBE_JDBC_USERNAME=root
-#      - SONARQUBE_JDBC_PASSWORD=root
-#    volumes:
-#      - sonarqube_conf:/opt/sonarqube/conf
-#      - sonarqube_data:/opt/sonarqube/data
-#      - sonarqube_extensions:/opt/sonarqube/extensions
+  sonarqube:
+    image: "sonarqube:7.5-community"
+    ports:
+      - "9010:9000"
+    networks:
+      sonarnet:
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
 
 volumes:
   db-data:
 #  jenkins-data:
-#  sonarqube_conf:
-#  sonarqube_data:
-#  sonarqube_extensions:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+
 #networks:
 #  memoire-api-network:
-#  sonarnet:
-#    driver: bridge
+  sonarnet:
+    driver: bridge

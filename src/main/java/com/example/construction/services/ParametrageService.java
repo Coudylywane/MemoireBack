@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.example.construction.repositories.ContactPrestataireRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.construction.models.*;
@@ -24,7 +26,6 @@ public class ParametrageService {
 
     private final ZoneStockRepository zoneStockRepository;
     private final UniteMesureRepository uniteMesureRepository;
-    private final FamilleArticleRepository familleArticleRepository;
     private final CategorieFournisseurRepository categorieFournisseurRepository;
     private final ContactFournisseurRepository contactFournistRepository;
     private final FournisseurRepository fournisseurRepository;
@@ -70,12 +71,11 @@ public class ParametrageService {
     }
 
     //Suppression
-    public void softDeleteZone(Long zoneId) {
+    public ZoneStock softDeleteZone(Long zoneId) {
         ZoneStock existingZone = zoneStockRepository.findById(zoneId)
                 .orElseThrow(() -> new EntityNotFoundException("Zone not found with id: " + zoneId));
-
-        existingZone.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
-        zoneStockRepository.save(existingZone);
+        existingZone.setStatus(1);
+        return zoneStockRepository.save(existingZone);
     }
 
     //LISTE
@@ -83,7 +83,15 @@ public class ParametrageService {
         return zoneStockRepository.findAll();
     }
 
+    public Page<ZoneStock> getZoneStockPage(Pageable pageable){
+        return zoneStockRepository.zoneStockPage(pageable);
+    }
 
+    // Recuperation zone par l'id
+
+    public ZoneStock getZoneById(Long id) {
+        return zoneStockRepository.findById(id).orElse(null);
+    }
 
 
     /// / //////////////////// UNITE MESURE //////////////////////////////////////////////////////////
@@ -145,78 +153,78 @@ public class ParametrageService {
 
     /// / //////////////////// FAMILLE  //////////////////////////////////////////////////////////
 
-    //AJOUT
-    public FamilleArticle addFamille(FamilleArticle famille) {
-        try {
-            familleArticleRepository.save(famille);
-            return famille;
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de l'ajout", e);
-        }
-    }
-
-    @Transactional
-    public FamilleArticle updateFamille(FamilleArticle famille) {
-        // Utilisez le mécanisme de @Transactional de Spring plutôt que le bloc try-catch
-        FamilleArticle existingFamille = familleArticleRepository.findById(famille.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Famille not found with id: " + famille.getId()));
-        // Mettre à jour les propriétés de la famille existante avec les nouvelles valeurs non nulles
-        if (famille.getDesignation() != null) {
-            existingFamille.setDesignation(famille.getDesignation());
-        }
-        if (famille.getDescription() != null) {
-            existingFamille.setDescription(famille.getDescription());
-        }
-        // Utilisez Collection.removeAll pour supprimer les types obsolètes
-        existingFamille.getTypeArticles().removeAll(
-                existingFamille.getTypeArticles()
-                        .stream()
-                        .filter(existingType -> !famille.getTypeArticles().contains(existingType))
-                        .collect(Collectors.toList())
-        );
-        // Ajoutez les nouveaux types
-        famille.getTypeArticles().forEach(existingFamille::addTypeArticle);
-        // Enregistrer la mise à jour dans la base de données
-        return familleArticleRepository.save(existingFamille);
-    }
-
-    public void softDeleteFamille(Long familleId) {
-        FamilleArticle existingFamille = familleArticleRepository.findById(familleId)
-                .orElseThrow(() -> new EntityNotFoundException("Famille not found with id: " + familleId));
-
-        existingFamille.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
-
-        // Si vous voulez une exception plus spécifique, vous pouvez créer une UniteNotFoundException
-        try {
-            familleArticleRepository.save(existingFamille);
-        } catch (Exception e) {
-            // Log the exception or perform any necessary actions
-            throw new RuntimeException("Error while soft deleting unite", e);
-        }
-    }
-
-    //LISTE
-    public List<FamilleArticle> getAllFamille() {
-        return familleArticleRepository.findAll();
-    }
-    public FamilleArticle getFamilleById(Long id) {
-        return familleArticleRepository.findById(id).orElse(null);
-    }
-
-    //LISTE + TYPE
-    @Transactional()
-    public List<FamilleArticle> getAllFamilleWithTypes() {
-        List<FamilleArticle> familles = familleArticleRepository.findAll();
-
-        return familles.stream()
-                .map(famille -> new FamilleArticle(
-                        famille.getId(),
-                        famille.getDesignation(),
-                        famille.getDescription(),
-                        famille.getStatus(),
-                        famille.getTypeArticles()))
-                .collect(Collectors.toList());
-    }
+//    //AJOUT
+//    public FamilleArticle addFamille(FamilleArticle famille) {
+//        try {
+//            familleArticleRepository.save(famille);
+//            return famille;
+//        } catch (Exception e) {
+//            throw new RuntimeException("Erreur lors de l'ajout", e);
+//        }
+//    }
+//
+//    @Transactional
+//    public FamilleArticle updateFamille(FamilleArticle famille) {
+//        // Utilisez le mécanisme de @Transactional de Spring plutôt que le bloc try-catch
+//        FamilleArticle existingFamille = familleArticleRepository.findById(famille.getId())
+//                .orElseThrow(() -> new EntityNotFoundException("Famille not found with id: " + famille.getId()));
+//        // Mettre à jour les propriétés de la famille existante avec les nouvelles valeurs non nulles
+//        if (famille.getDesignation() != null) {
+//            existingFamille.setDesignation(famille.getDesignation());
+//        }
+//        if (famille.getDescription() != null) {
+//            existingFamille.setDescription(famille.getDescription());
+//        }
+//        // Utilisez Collection.removeAll pour supprimer les types obsolètes
+//        existingFamille.getTypeArticles().removeAll(
+//                existingFamille.getTypeArticles()
+//                        .stream()
+//                        .filter(existingType -> !famille.getTypeArticles().contains(existingType))
+//                        .collect(Collectors.toList())
+//        );
+//        // Ajoutez les nouveaux types
+//        famille.getTypeArticles().forEach(existingFamille::addTypeArticle);
+//        // Enregistrer la mise à jour dans la base de données
+//        return familleArticleRepository.save(existingFamille);
+//    }
+//
+//    public void softDeleteFamille(Long familleId) {
+//        FamilleArticle existingFamille = familleArticleRepository.findById(familleId)
+//                .orElseThrow(() -> new EntityNotFoundException("Famille not found with id: " + familleId));
+//
+//        existingFamille.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
+//
+//        // Si vous voulez une exception plus spécifique, vous pouvez créer une UniteNotFoundException
+//        try {
+//            familleArticleRepository.save(existingFamille);
+//        } catch (Exception e) {
+//            // Log the exception or perform any necessary actions
+//            throw new RuntimeException("Error while soft deleting unite", e);
+//        }
+//    }
+//
+//    //LISTE
+//    public List<FamilleArticle> getAllFamille() {
+//        return familleArticleRepository.findAll();
+//    }
+//    public FamilleArticle getFamilleById(Long id) {
+//        return familleArticleRepository.findById(id).orElse(null);
+//    }
+//
+//    //LISTE + TYPE
+//    @Transactional()
+//    public List<FamilleArticle> getAllFamilleWithTypes() {
+//        List<FamilleArticle> familles = familleArticleRepository.findAll();
+//
+//        return familles.stream()
+//                .map(famille -> new FamilleArticle(
+//                        famille.getId(),
+//                        famille.getDesignation(),
+//                        famille.getDescription(),
+//                        famille.getStatus(),
+//                        famille.getTypeArticles()))
+//                .collect(Collectors.toList());
+//    }
 
     /// / //////////////////// TYPE FAMILLE  //////////////////////////////////////////////////////////
 
@@ -233,12 +241,12 @@ public class ParametrageService {
         TypeArticle existingTypeArticle = typeArticleRepository.findById(typeArticle.getId())
                 .orElseThrow(() -> new EntityNotFoundException("TypeArticle not found with id: " + typeArticle.getId()));
         // Vérifier si la famille a changé
-        if (!Objects.equals(existingTypeArticle.getFamilleArticle(), typeArticle.getFamilleArticle())) {
-            // Supprimer le TypeArticle de l'ancienne famille
-            existingTypeArticle.getFamilleArticle().removeArticleType(existingTypeArticle);
-            // Ajouter le TypeArticle à la nouvelle famille
-            typeArticle.getFamilleArticle().addTypeArticle(existingTypeArticle);
-        }
+//        if (!Objects.equals(existingTypeArticle.getFamilleArticle(), typeArticle.getFamilleArticle())) {
+//            // Supprimer le TypeArticle de l'ancienne famille
+//            existingTypeArticle.getFamilleArticle().removeArticleType(existingTypeArticle);
+//            // Ajouter le TypeArticle à la nouvelle famille
+//            typeArticle.getFamilleArticle().addTypeArticle(existingTypeArticle);
+//        }
         // Mettre à jour les propriétés du TypeArticle existant avec les nouvelles valeurs
         existingTypeArticle.setDesignation(typeArticle.getDesignation());
         existingTypeArticle.setDescription(typeArticle.getDescription());

@@ -41,8 +41,8 @@ public class Article{
     @ManyToOne
     @JoinColumn(name = "uniteMesure", referencedColumnName = "id")
     private UniteMesure uniteMesure;
-//teste
+
     @ManyToOne
-    @JoinColumn(name = "famille", referencedColumnName = "id")
-    private FamilleArticle familleArticle;
+    @JoinColumn(name = "typeArticle", referencedColumnName = "id")
+    private TypeArticle typeArticle;
 }

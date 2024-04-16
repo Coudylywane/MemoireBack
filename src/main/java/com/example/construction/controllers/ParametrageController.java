@@ -1,20 +1,22 @@
 package com.example.construction.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
+import com.example.construction.exceptions.BadRequestException;
+import com.example.construction.exceptions.InternalServerErrorException;
 import com.example.construction.models.*;
 import javax.persistence.EntityNotFoundException;
+
+import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.construction.request.TypeArticleRequest;
 import com.example.construction.services.ParametrageService;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@Log
 @RequestMapping("/api")
 public class ParametrageController {
 
@@ -48,6 +51,25 @@ public class ParametrageController {
         return ResponseEntity.ok(zone);
     }
 
+    @GetMapping("/zones")
+    public ResponseEntity<?> getZonePage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam (defaultValue = "2") int size
+    ){
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<ZoneStock> zoneStockPage = parametrageService.getZoneStockPage(paging);
+            Map<String, Object> response = new HashMap<>();
+            response.put("zone", zoneStockPage.getContent());
+            response.put("currentPage", zoneStockPage.getNumber());
+            response.put("totalItems", zoneStockPage.getTotalElements());
+            response.put("totalPages", zoneStockPage.getTotalPages());
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
     @PutMapping("/zone/{id}")
     public ResponseEntity<?> updateZone(@PathVariable Long id, @RequestBody ZoneStock updatedZone) {
         try {
@@ -65,6 +87,18 @@ public class ParametrageController {
         }
     }
     
+//    @DeleteMapping("/zone/{id}")
+//    public ResponseEntity<?> softDeleteZone(@PathVariable Long id) {
+//        try {
+//            parametrageService.softDeleteZone(id);
+//            return ResponseEntity.ok().build();
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zone not found with id: " + id);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
+
     @DeleteMapping("/zone/{id}")
     public ResponseEntity<?> softDeleteZone(@PathVariable Long id) {
         try {
@@ -73,6 +107,24 @@ public class ParametrageController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zone not found with id: " + id);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/zone/{id}")
+    public ResponseEntity<?> getZoneById(@PathVariable Long id) {
+        try {
+            if (id == null) throw new BadRequestException("id required");
+
+            ZoneStock zoneStock = parametrageService.getZoneById(id);
+
+            if (zoneStock == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            } else {
+                return ResponseEntity.ok(zoneStock);
+            }
+        } catch (Exception e) {
+            log.info(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -124,58 +176,58 @@ public class ParametrageController {
         }
     }
 
-    ///////////////////////////////////// FAMILLE ///////////////////////////////////////////////////////////
-
-    @PostMapping("/famille")
-    public ResponseEntity<FamilleArticle> addFamille(@RequestBody FamilleArticle newFamille) {
-        try {
-            // Enregistrez le nouveau ZoneStock avec le statut défini sur 0 par défaut
-            newFamille.setStatus(0);
-            FamilleArticle savedFamille = parametrageService.addFamille(newFamille);
-
-            return ResponseEntity.ok(savedFamille);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    @GetMapping("/famille")
-    public ResponseEntity<?> getAllFamille() {
-        List<FamilleArticle> famille = parametrageService.getAllFamilleWithTypes();
-        return ResponseEntity.ok(famille);
-    }
-
-    @GetMapping("/familleAndType")
-    public ResponseEntity<?> getAllFamilleWithTypes() {
-        List<FamilleArticle> famille = parametrageService.getAllFamilleWithTypes();
-        return ResponseEntity.ok(famille);
-    }
-
-    @PutMapping("/famille/{id}")
-    public ResponseEntity<?> updateFamille(@PathVariable Long id, @RequestBody FamilleArticle famille) {
-        try {
-            famille.setId(id);
-            famille.setStatus(0);
-            FamilleArticle updated = parametrageService.updateFamille(famille);
-            return ResponseEntity.ok(updated);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Famille not found with id: " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/famille/{id}")
-    public ResponseEntity<?> softDeleteFamille(@PathVariable Long id) {
-        try {
-            parametrageService.softDeleteFamille(id);
-            return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Famille not found with id: " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
+//    ///////////////////////////////////// FAMILLE ///////////////////////////////////////////////////////////
+//
+//    @PostMapping("/famille")
+//    public ResponseEntity<FamilleArticle> addFamille(@RequestBody FamilleArticle newFamille) {
+//        try {
+//            // Enregistrez le nouveau ZoneStock avec le statut défini sur 0 par défaut
+//            newFamille.setStatus(0);
+//            FamilleArticle savedFamille = parametrageService.addFamille(newFamille);
+//
+//            return ResponseEntity.ok(savedFamille);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).build();
+//        }
+//    }
+//
+//    @GetMapping("/famille")
+//    public ResponseEntity<?> getAllFamille() {
+//        List<FamilleArticle> famille = parametrageService.getAllFamilleWithTypes();
+//        return ResponseEntity.ok(famille);
+//    }
+//
+//    @GetMapping("/familleAndType")
+//    public ResponseEntity<?> getAllFamilleWithTypes() {
+//        List<FamilleArticle> famille = parametrageService.getAllFamilleWithTypes();
+//        return ResponseEntity.ok(famille);
+//    }
+//
+//    @PutMapping("/famille/{id}")
+//    public ResponseEntity<?> updateFamille(@PathVariable Long id, @RequestBody FamilleArticle famille) {
+//        try {
+//            famille.setId(id);
+//            famille.setStatus(0);
+//            FamilleArticle updated = parametrageService.updateFamille(famille);
+//            return ResponseEntity.ok(updated);
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Famille not found with id: " + id);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
+//
+//    @DeleteMapping("/famille/{id}")
+//    public ResponseEntity<?> softDeleteFamille(@PathVariable Long id) {
+//        try {
+//            parametrageService.softDeleteFamille(id);
+//            return ResponseEntity.ok().build();
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Famille not found with id: " + id);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
 
     ///////////////////////////////////// TYPE ARTICLE ///////////////////////////////////////////////////////////
 
@@ -183,8 +235,6 @@ public class ParametrageController {
     @PostMapping("/typeArticles")
     public ResponseEntity<?> addTypeArticleToFamily(@RequestBody TypeArticle typeArticle) {
         try {
-            FamilleArticle familleArticle = parametrageService.getFamilleById(typeArticle.getFamilleArticle().getId());
-            typeArticle.setFamilleArticle(familleArticle);
             TypeArticle savedTypeArticle = parametrageService.addTypeArticleToFamily(typeArticle);
             return ResponseEntity.ok().body(savedTypeArticle);
         } catch (EntityNotFoundException e) {
@@ -416,7 +466,7 @@ public class ParametrageController {
     @DeleteMapping("/fournisseur/{id}")
     public ResponseEntity<?> softDeleteFournisseur(@PathVariable Long id) {
         try {
-            parametrageService.softDeleteFamille(id);
+            parametrageService. softDeleteFournisseur(id);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Famille not found with id: " + id);

@@ -28,7 +28,7 @@ public class UtilisateurController {
     @GetMapping("role")
     public ResponseEntity<?> getAllRole()
     {
-        List<Role> role = utilisateurService.getAllRole();
+        List<Role> role = utilisateurService.getAllRoles();
         return ResponseEntity.ok(role);
     }
 

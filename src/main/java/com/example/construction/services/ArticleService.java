@@ -24,8 +24,8 @@ public class ArticleService {
     private final ArticleRepository articleRepository ;
     private final ZoneStockRepository zoneStockRepository;
     private final UniteMesureRepository uniteMesureRepository;
-    private final FamilleArticleRepository familleArticleRepository;
     //private final ValidationUtils validationUtils;
+    private final TypeArticleRepository typeArticleRepository;
     private final ValidationUtils validationUtils ;
 
 
@@ -83,8 +83,8 @@ public class ArticleService {
             UniteMesure uniteMesure = uniteMesureRepository.findById(article.getUniteMesure().getId())
                     .orElseThrow(() -> new EntityNotFoundException("UniteMesure not found with id: " + article.getUniteMesure().getId()));
 
-            FamilleArticle familleArticle = familleArticleRepository.findById(article.getFamilleArticle().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("FamilleArticle not found with id: " + article.getFamilleArticle().getId()));
+            TypeArticle typeArticle = typeArticleRepository.findById(article.getTypeArticle().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("FamilleArticle not found with id: " + article.getTypeArticle().getId()));
 
             String generatedCode = generateUniqueCode();
             article.setCode(generatedCode);
@@ -96,7 +96,7 @@ public class ArticleService {
             article.setPrixReviensUnitaire(article.getPrixReviensUnitaire());
             article.setZoneStock(zoneStock);
             article.setUniteMesure(uniteMesure);
-            article.setFamilleArticle(familleArticle);
+            article.setTypeArticle(typeArticle);
 
             Article savedArticle = articleRepository.save(article);
 
@@ -138,8 +138,8 @@ public class ArticleService {
             UniteMesure uniteMesure = uniteMesureRepository.findById(updatedArticle.getUniteMesure().getId())
                     .orElseThrow(() -> new EntityNotFoundException("UniteMesure not found with id: " + updatedArticle.getUniteMesure().getId()));
 
-            FamilleArticle familleArticle = familleArticleRepository.findById(updatedArticle.getFamilleArticle().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("FamilleArticle not found with id: " + updatedArticle.getFamilleArticle().getId()));
+            TypeArticle familleArticle = typeArticleRepository.findById(updatedArticle.getTypeArticle().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("FamilleArticle not found with id: " + updatedArticle.getTypeArticle().getId()));
 
             // Mettez à jour les propriétés de l'article existant avec les nouvelles valeurs
             existingArticle.setCode(generateUniqueCode());
@@ -151,7 +151,7 @@ public class ArticleService {
             existingArticle.setPrixReviensUnitaire(updatedArticle.getPrixReviensUnitaire());
             existingArticle.setZoneStock(zoneStock);
             existingArticle.setUniteMesure(uniteMesure);
-            existingArticle.setFamilleArticle(familleArticle);
+            existingArticle.setTypeArticle(familleArticle);
 
             // Enregistrez la mise à jour dans la base de données
             return articleRepository.save(existingArticle);

@@ -29,7 +29,8 @@ public class ReglementFournisseur {
     public void softDelete() {
         this.status = 1;
     }
-//    @ManyToOne
-//    @JoinColumn(name = "commande", referencedColumnName = "id")
-//    private Commande commande;
+
+    @ManyToOne
+    @JoinColumn(name = "facture", referencedColumnName = "id")
+    private Facture facture;
 }
