@@ -129,19 +129,30 @@ public class ParametrageService {
     }
 
 
-    public void softDeleteUnite(Long uniteId) {
+//    public void softDeleteUnite(Long uniteId) {
+//        UniteMesure existingUnite = uniteMesureRepository.findById(uniteId)
+//                .orElseThrow(() -> new EntityNotFoundException("Unite not found with id: " + uniteId));
+//
+//        existingUnite.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
+//
+//        // Si vous voulez une exception plus spécifique, vous pouvez créer une UniteNotFoundException
+//        try {
+//            uniteMesureRepository.save(existingUnite);
+//        } catch (Exception e) {
+//            // Log the exception or perform any necessary actions
+//            throw new RuntimeException("Error while soft deleting unite", e);
+//        }
+//    }
+
+    public UniteMesure softDeleteUnite(Long uniteId) {
         UniteMesure existingUnite = uniteMesureRepository.findById(uniteId)
-                .orElseThrow(() -> new EntityNotFoundException("Unite not found with id: " + uniteId));
+                .orElseThrow(() -> new EntityNotFoundException("Unite de mesure not found with id: " + uniteId));
+        existingUnite.setStatus(1);
+        return uniteMesureRepository.save(existingUnite);
+    }
 
-        existingUnite.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
-
-        // Si vous voulez une exception plus spécifique, vous pouvez créer une UniteNotFoundException
-        try {
-            uniteMesureRepository.save(existingUnite);
-        } catch (Exception e) {
-            // Log the exception or perform any necessary actions
-            throw new RuntimeException("Error while soft deleting unite", e);
-        }
+    public UniteMesure getUniteById(Long id) {
+        return uniteMesureRepository.findById(id).orElse(null);
     }
 
 
@@ -149,6 +160,10 @@ public class ParametrageService {
     //LISTE
     public List<UniteMesure> getAllUnite() {
         return uniteMesureRepository.findAll();
+    }
+
+    public Page<UniteMesure> getUniteMesurePage(Pageable pageable){
+        return uniteMesureRepository.uniteMesurePage(pageable);
     }
 
     /// / //////////////////// FAMILLE  //////////////////////////////////////////////////////////

@@ -77,7 +77,6 @@ public class ParametrageController {
             updatedZone.setStatus(0);
 
             ZoneStock updated = parametrageService.updateZone(updatedZone);
-
             return ResponseEntity.ok(updated);
 
         } catch (EntityNotFoundException e) {
@@ -87,17 +86,7 @@ public class ParametrageController {
         }
     }
     
-//    @DeleteMapping("/zone/{id}")
-//    public ResponseEntity<?> softDeleteZone(@PathVariable Long id) {
-//        try {
-//            parametrageService.softDeleteZone(id);
-//            return ResponseEntity.ok().build();
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zone not found with id: " + id);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
+
 
     @DeleteMapping("/zone/{id}")
     public ResponseEntity<?> softDeleteZone(@PathVariable Long id) {
@@ -115,9 +104,7 @@ public class ParametrageController {
     public ResponseEntity<?> getZoneById(@PathVariable Long id) {
         try {
             if (id == null) throw new BadRequestException("id required");
-
             ZoneStock zoneStock = parametrageService.getZoneById(id);
-
             if (zoneStock == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             } else {
@@ -150,6 +137,25 @@ public class ParametrageController {
         return ResponseEntity.ok(zone);
     }
 
+    @GetMapping("/uniteMesures")
+    public ResponseEntity<?> getUniteMesurePage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam (defaultValue = "2") int size
+    ){
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<UniteMesure> uniteMesurePage= parametrageService.getUniteMesurePage(paging);
+            Map<String, Object> response = new HashMap<>();
+            response.put("uniteMesure", uniteMesurePage.getContent());
+            response.put("currentPage", uniteMesurePage.getNumber());
+            response.put("totalItems", uniteMesurePage.getTotalElements());
+            response.put("totalPages", uniteMesurePage.getTotalPages());
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
     @PutMapping("/unite/{id}")
     public ResponseEntity<?> updateUnite(@PathVariable Long id, @RequestBody UniteMesure updatedUnite) {
         try {
@@ -172,6 +178,22 @@ public class ParametrageController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unite not found with id: " + id);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/unite/{id}")
+    public ResponseEntity<?> getUniteById(@PathVariable Long id) {
+        try {
+            if (id == null) throw new BadRequestException("id required");
+            UniteMesure uniteMesure = parametrageService.getUniteById(id);
+            if (uniteMesure == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            } else {
+                return ResponseEntity.ok(uniteMesure);
+            }
+        } catch (Exception e) {
+            log.info(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
