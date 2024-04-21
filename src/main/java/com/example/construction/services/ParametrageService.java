@@ -255,13 +255,7 @@ public class ParametrageService {
     public TypeArticle updateTypeArticle(TypeArticle typeArticle) {
         TypeArticle existingTypeArticle = typeArticleRepository.findById(typeArticle.getId())
                 .orElseThrow(() -> new EntityNotFoundException("TypeArticle not found with id: " + typeArticle.getId()));
-        // Vérifier si la famille a changé
-//        if (!Objects.equals(existingTypeArticle.getFamilleArticle(), typeArticle.getFamilleArticle())) {
-//            // Supprimer le TypeArticle de l'ancienne famille
-//            existingTypeArticle.getFamilleArticle().removeArticleType(existingTypeArticle);
-//            // Ajouter le TypeArticle à la nouvelle famille
-//            typeArticle.getFamilleArticle().addTypeArticle(existingTypeArticle);
-//        }
+
         // Mettre à jour les propriétés du TypeArticle existant avec les nouvelles valeurs
         existingTypeArticle.setDesignation(typeArticle.getDesignation());
         existingTypeArticle.setDescription(typeArticle.getDescription());
@@ -269,22 +263,36 @@ public class ParametrageService {
         return typeArticleRepository.save(existingTypeArticle);
     }
 
-    public void softDeleteTypeArticle(Long typeArticleId) {
-        TypeArticle existingTypeArticle = typeArticleRepository.findById(typeArticleId)
-                .orElseThrow(() -> new EntityNotFoundException("Famille not found with id: " + typeArticleId));
-        existingTypeArticle.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
-        // Si vous voulez une exception plus spécifique, vous pouvez créer une UniteNotFoundException
-        try {
-            typeArticleRepository.save(existingTypeArticle);
-        } catch (Exception e) {
-            // Log the exception or perform any necessary actions
-            throw new RuntimeException("Error while soft deleting type article", e);
-        }
+//    public void softDeleteTypeArticle(Long typeArticleId) {
+//        TypeArticle existingTypeArticle = typeArticleRepository.findById(typeArticleId)
+//                .orElseThrow(() -> new EntityNotFoundException("Famille not found with id: " + typeArticleId));
+//        existingTypeArticle.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
+//        // Si vous voulez une exception plus spécifique, vous pouvez créer une UniteNotFoundException
+//        try {
+//            typeArticleRepository.save(existingTypeArticle);
+//        } catch (Exception e) {
+//            // Log the exception or perform any necessary actions
+//            throw new RuntimeException("Error while soft deleting type article", e);
+//        }
+//    }
+    public TypeArticle softDeleteTypeArticle(Long typeArticleId) {
+        TypeArticle existingType = typeArticleRepository.findById(typeArticleId)
+                .orElseThrow(() -> new EntityNotFoundException("Unite de mesure not found with id: " + typeArticleId));
+        existingType.setStatus(1);
+        return typeArticleRepository.save(existingType);
     }
 
     //LISTE
     public List<TypeArticle> getAllTypeArticle() {
         return typeArticleRepository.findAll();
+    }
+
+    public Page<TypeArticle> getTypeArticlePage(Pageable pageable){
+        return typeArticleRepository.typeArticlePage(pageable);
+    }
+
+    public TypeArticle getTypeById(Long id) {
+        return typeArticleRepository.findById(id).orElse(null);
     }
 
     /// / //////////////////// CATEGORIE FOURNISSEUR //////////////////////////////////////////////////////////

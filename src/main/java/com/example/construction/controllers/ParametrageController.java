@@ -299,6 +299,43 @@ public class ParametrageController {
         return ResponseEntity.ok(typeArticles);
     }
 
+    @GetMapping("/types")
+    public ResponseEntity<?> getTypeArticlePage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam (defaultValue = "2") int size
+    ){
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<TypeArticle> typeArticlePage= parametrageService.getTypeArticlePage(paging);
+            Map<String, Object> response = new HashMap<>();
+            response.put("typeArticle", typeArticlePage.getContent());
+            response.put("currentPage", typeArticlePage.getNumber());
+            response.put("totalItems", typeArticlePage.getTotalElements());
+            response.put("totalPages", typeArticlePage.getTotalPages());
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @GetMapping("/type/{id}")
+    public ResponseEntity<?> getTypeById(@PathVariable Long id) {
+        try {
+            if (id == null) throw new BadRequestException("id required");
+            TypeArticle typeArticle = parametrageService.getTypeById(id);
+            if (typeArticle == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            } else {
+                return ResponseEntity.ok(typeArticle);
+            }
+        } catch (Exception e) {
+            log.info(e.getLocalizedMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+
 ////////////////////////////////////// CATEGORIE FOURNISSEUR ///////////////////////////////////////////////////////
 
     @PostMapping("/categorie-fournisseur")
