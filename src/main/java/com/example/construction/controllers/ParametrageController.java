@@ -358,6 +358,26 @@ public class ParametrageController {
         return ResponseEntity.ok(categories);
     }
 
+
+    @GetMapping("/categorieFournisseur")
+    public ResponseEntity<?> getcategorieFournisseurPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam (defaultValue = "2") int size
+    ){
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<CategorieFournisseur> categorieFournisseurPage= parametrageService.getCategorieFournisseurPage(paging);
+            Map<String, Object> response = new HashMap<>();
+            response.put("categorieFournisseur", categorieFournisseurPage.getContent());
+            response.put("currentPage", categorieFournisseurPage.getNumber());
+            response.put("totalItems", categorieFournisseurPage.getTotalElements());
+            response.put("totalPages", categorieFournisseurPage.getTotalPages());
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
     @PutMapping("/categorie-fournisseur/{id}")
     public ResponseEntity<?> updateCategorieFournisseur(@PathVariable Long id, @RequestBody CategorieFournisseur updatedCategorieFournisseur) {
         try {
@@ -369,6 +389,22 @@ public class ParametrageController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zone not found with id: " + id);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/categorieFournisseur/{id}")
+    public ResponseEntity<?> getCategorieFournisseurById(@PathVariable Long id) {
+        try {
+            if (id == null) throw new BadRequestException("id required");
+            CategorieFournisseur categorieFournisseur = parametrageService.getCategorieFournisseurById(id);
+            if (categorieFournisseur == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            } else {
+                return ResponseEntity.ok(categorieFournisseur);
+            }
+        } catch (Exception e) {
+            log.info(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

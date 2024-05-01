@@ -329,12 +329,19 @@ public class ParametrageService {
     }
 
     //Suppression
-    public void softDeleteCategorieFournisseur(Long categorieFournisseurId) {
+    public CategorieFournisseur softDeleteCategorieFournisseur(Long categorieFournisseurId) {
         CategorieFournisseur existingCategorieFournisseur = categorieFournisseurRepository.findById(categorieFournisseurId)
-                .orElseThrow(() -> new EntityNotFoundException("Zone not found with id: " + categorieFournisseurId));
+                .orElseThrow(() -> new EntityNotFoundException("Unite de mesure not found with id: " + categorieFournisseurId));
+        existingCategorieFournisseur.setStatus(1);
+        return categorieFournisseurRepository.save(existingCategorieFournisseur);
+    }
 
-        existingCategorieFournisseur.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
-        categorieFournisseurRepository.save(existingCategorieFournisseur);
+    public Page<CategorieFournisseur> getCategorieFournisseurPage(Pageable pageable){
+        return categorieFournisseurRepository.categorieFournisseurPage(pageable);
+    }
+
+    public CategorieFournisseur getCategorieFournisseurById(Long id) {
+        return categorieFournisseurRepository.findById(id).orElse(null);
     }
 
     //LISTE
@@ -383,14 +390,7 @@ public class ParametrageService {
         }
     }
 
-    //Suppression
-//    public void softDeleteTypeFournisseur(Long typeFournisseurId) {
-//        TypeFournisseur existingTypeFournisseur = typeFournisseurRepository.findById(typeFournisseurId)
-//                .orElseThrow(() -> new EntityNotFoundException("Zone not found with id: " + typeFournisseurId));
-//
-//        existingTypeFournisseur.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
-//        typeFournisseurRepository.save(existingTypeFournisseur);
-//    }
+
     public TypeFournisseur softDeleteTypeFournisseur(Long typeFournisseurId) {
         TypeFournisseur existingTypeFournisseur = typeFournisseurRepository.findById(typeFournisseurId)
                 .orElseThrow(() -> new EntityNotFoundException("Unite de mesure not found with id: " + typeFournisseurId));
