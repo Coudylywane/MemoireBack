@@ -33,7 +33,8 @@ public class ContactFournisseur {
     }
 
 
-    @OneToMany(mappedBy = "contactFournisseur", cascade = CascadeType.ALL)
-    private List<Fournisseur> fournisseurs;
+    @ManyToOne
+    @JoinColumn(name = "fournisseur", referencedColumnName = "id")
+    private Fournisseur fournisseur;
 
 }

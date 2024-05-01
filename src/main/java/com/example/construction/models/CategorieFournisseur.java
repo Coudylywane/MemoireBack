@@ -31,7 +31,7 @@ public class CategorieFournisseur {
         this.status = 1;
     }
 
-    @OneToMany(mappedBy = "categorieFournisseur", cascade = CascadeType.ALL)
-    private List<Fournisseur> fournisseurs;
-    
+
+
+
 }
