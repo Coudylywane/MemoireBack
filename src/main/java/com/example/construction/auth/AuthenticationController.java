@@ -35,6 +35,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
 
+
+
     @GetMapping("/connected-user")
     public ResponseEntity<UserDto> connectedUser() {
         try {

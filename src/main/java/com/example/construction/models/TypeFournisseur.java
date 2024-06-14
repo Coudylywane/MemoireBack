@@ -28,6 +28,6 @@ public class TypeFournisseur {
         this.status = 1;
     }
 
-    @OneToMany(mappedBy = "typeFournisseur", cascade = CascadeType.ALL)
-    private List<Fournisseur> fournisseurs;
+//    @OneToMany(mappedBy = "typeFournisseur", cascade = CascadeType.ALL)
+//    private List<Fournisseur> fournisseurs;
 }

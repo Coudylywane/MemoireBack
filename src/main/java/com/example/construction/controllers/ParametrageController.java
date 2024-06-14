@@ -548,61 +548,7 @@ public class ParametrageController {
         }
     }
 
-    ///////////////////////////////////// FOURNISSEURS ///////////////////////////////////////////////////////////
 
-//    @PostMapping("/fournisseur")
-//    public ResponseEntity<Fournisseur> addFournisseur(@RequestBody Fournisseur newFournisseur) {
-//        try {
-//            newFournisseur.setStatus(0);
-//            Fournisseur savedFournisseur = parametrageService.addFournisseur(newFournisseur);
-//
-//            return ResponseEntity.ok(savedFournisseur);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).build();
-//        }
-//    }
-
-//    @GetMapping("/fournisseur")
-//    public ResponseEntity<?> getAllFournisseur() {
-//        List<Fournisseur> fournisseur = parametrageService.getAllFournisseurWithTypes();
-//        return ResponseEntity.ok(fournisseur);
-//    }
-
-//    @GetMapping("/fournisseurAndType")
-//    public ResponseEntity<?> getAllFournisseurWithTypes() {
-//        List<Fournisseur> fournisseur = parametrageService.getAllFournisseurWithTypes();
-//        return ResponseEntity.ok(fournisseur);
-//    }
-
-
-
-    ///////////////////////////////////// FOURNISSEURS ///////////////////////////////////////////////////////////
-//
-//    @PutMapping("/fournisseur/{id}")
-//    public ResponseEntity<?> updateFournisseur(@PathVariable Long id, @RequestBody Fournisseur fournisseur) {
-//        try {
-//            fournisseur.setId(id);
-//            fournisseur.setStatus(0);
-//            Fournisseur updated = parametrageService.updateFournisseur(fournisseur);
-//            return ResponseEntity.ok(updated);
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Famille not found with id: " + id);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
-//
-//    @DeleteMapping("/fournisseur/{id}")
-//    public ResponseEntity<?> softDeleteFournisseur(@PathVariable Long id) {
-//        try {
-//            parametrageService. softDeleteFournisseur(id);
-//            return ResponseEntity.ok().build();
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Famille not found with id: " + id);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//        }
-//    }
 
     //////////////////////////////////// TYPE PRESTATAIRE /////////////////////////
 

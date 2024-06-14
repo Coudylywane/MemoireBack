@@ -33,11 +33,11 @@ public class Fournisseur {
     }
 
     @ManyToOne
-    @JoinColumn(name = "categorie")
+    @JoinColumn(name = "categorieFournisseur")
     private CategorieFournisseur categorieFournisseur;
 
     @ManyToOne
-    @JoinColumn(name = "type", referencedColumnName = "id")
+    @JoinColumn(name = "typeFournisseur", referencedColumnName = "id")
     private TypeFournisseur typeFournisseur;
 
 
