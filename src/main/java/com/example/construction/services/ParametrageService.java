@@ -345,7 +345,7 @@ public class ParametrageService {
 
     //LISTE
     public List<CategorieFournisseur> getAllCategorieFournisseur() {
-        return categorieFournisseurRepository.findAll();
+        return categorieFournisseurRepository.selectAll();
     }
 
     /// / //////////////////// TYPE FOURNISSEUR //////////////////////////////////////////////////////////
@@ -399,7 +399,7 @@ public class ParametrageService {
 
     //LISTE
     public List<TypeFournisseur> getAllTypeFournisseur() {
-        return typeFournisseurRepository.findAll();
+        return typeFournisseurRepository.selectAll();
     }
 
     //////////////////////////////////////////// CONTACT FOURNISSEUR ///////////////////////////////////////////

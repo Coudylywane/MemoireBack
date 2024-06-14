@@ -8,8 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CategorieFournisseurRepository extends JpaRepository<CategorieFournisseur, Long > {
     @Query("SELECT cf FROM CategorieFournisseur cf where cf.status = 0")
     Page<CategorieFournisseur> categorieFournisseurPage(Pageable pageable);
+
+    @Query("SELECT cf FROM CategorieFournisseur cf where cf.status = 0")
+    List<CategorieFournisseur> selectAll();
+
 }

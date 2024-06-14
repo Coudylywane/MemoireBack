@@ -1,6 +1,7 @@
 package com.example.construction.services;
 
 import com.example.construction.models.*;
+import com.example.construction.repositories.CategorieFournisseurRepository;
 import com.example.construction.repositories.FournisseurRepository;
 import com.example.construction.repositories.TypeFournisseurRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,25 +19,18 @@ import java.util.List;
 public class FournisseurService {
     private final FournisseurRepository fournisseurRepository;
     private final TypeFournisseurRepository typeFournisseurRepository;
+    private final CategorieFournisseurRepository categorieFournisseurRepository;
 
-    // AJOUT
-//    public Fournisseur addFournisseur(Fournisseur fournisseur) {
-//        try {
-//            Long typeFournisseurId = fournisseur.getTypeFournisseur().getId();
-//            TypeFournisseur typeFournisseur = typeFournisseurRepository.findById(typeFournisseurId)
-//                    .orElseThrow(() -> new RuntimeException("Type de fournisseur non trouvé"));
-//            fournisseur.setTypeFournisseur(typeFournisseur);
-//            return fournisseurRepository.save(fournisseur);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Erreur lors de l'ajout", e);
-//        }
-//    }
+
 
     public ResponseEntity<Object> addFournisseur(Fournisseur fournisseur) {
         try {
 
             TypeFournisseur typeFournisseur = typeFournisseurRepository.findById(fournisseur.getTypeFournisseur().getId())
                     .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Type de fournisseur not found with id: " + fournisseur.getTypeFournisseur().getId()));
+            CategorieFournisseur categorieFournisseur = categorieFournisseurRepository.findById(fournisseur.getCategorieFournisseur().getId())
+                    .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Categorie de fournisseur not found with id: " + fournisseur.getCategorieFournisseur().getId()));
+
 
             fournisseur.setAdresse(fournisseur.getAdresse());
             fournisseur.setEmail(fournisseur.getEmail());
@@ -45,6 +39,7 @@ public class FournisseurService {
             fournisseur.setTelephone(fournisseur.getTelephone());
             fournisseur.setTotalVersement(fournisseur.getTotalVersement());
             fournisseur.setTypeFournisseur(typeFournisseur);
+            fournisseur.setCategorieFournisseur(categorieFournisseur);
             Fournisseur savedFournisseur = fournisseurRepository.save(fournisseur);
             // Renvoyez une réponse contenant l'objet Article en cas de succès
             return ResponseEntity.ok().body(savedFournisseur);
