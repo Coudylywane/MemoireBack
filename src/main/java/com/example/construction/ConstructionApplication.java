@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Log
 @RequiredArgsConstructor
 @SpringBootApplication
-public class ConstructionApplication extends SpringBootServletInitializer implements CommandLineRunner {
+public class 	ConstructionApplication extends SpringBootServletInitializer implements CommandLineRunner {
 //	@Autowired
 //	private UtilisateurFixture utilisateurFixture;
 //	@Override

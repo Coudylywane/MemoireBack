@@ -25,13 +25,10 @@ public class FournisseurService {
 
     public ResponseEntity<Object> addFournisseur(Fournisseur fournisseur) {
         try {
-
             TypeFournisseur typeFournisseur = typeFournisseurRepository.findById(fournisseur.getTypeFournisseur().getId())
                     .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Type de fournisseur not found with id: " + fournisseur.getTypeFournisseur().getId()));
             CategorieFournisseur categorieFournisseur = categorieFournisseurRepository.findById(fournisseur.getCategorieFournisseur().getId())
                     .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Categorie de fournisseur not found with id: " + fournisseur.getCategorieFournisseur().getId()));
-
-
             fournisseur.setAdresse(fournisseur.getAdresse());
             fournisseur.setEmail(fournisseur.getEmail());
             fournisseur.setNom(fournisseur.getNom());
