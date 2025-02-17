@@ -27,6 +27,9 @@ public class ArticleService {
     //private final ValidationUtils validationUtils;
     private final TypeArticleRepository typeArticleRepository;
     private final ValidationUtils validationUtils ;
+    public List<Article> getArticlesByIds(List<Long> ids) {
+        return articleRepository.findAllByIdIn(ids); // Récupère les articles correspondant aux ids
+    }
 
 
 //    @Transactional

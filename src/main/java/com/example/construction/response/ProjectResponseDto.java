@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class ProjectResponseDto {
-    private String projectId;
+    private Long projectId;
     private String projectName;
 }
