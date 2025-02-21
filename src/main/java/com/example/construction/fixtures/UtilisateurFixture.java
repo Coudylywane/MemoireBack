@@ -76,6 +76,7 @@ public class UtilisateurFixture {
                     new Role(null, "ADMIN"),
                     new Role(null, "VENDEUR")
             };
+            utilisateurService.addAllRole(Arrays.asList(profils));
             System.out.println(utilisateurService.addAllRole(Arrays.asList(profils)));
         }
     }
@@ -88,6 +89,7 @@ public class UtilisateurFixture {
                 null, "Admin", "Admin", "774315331", "admin@gmail.com",
                     bCryptPasswordEncoder.encode("admin@passer"),false,true,null
             );
+            utilisateurService.addUser(defaultUser);  // Ajouter l'utilisateur à la base de données
             System.out.println("default admin added successfully");
         }
     }

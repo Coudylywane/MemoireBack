@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 @Getter
 public class ProjectRequestDto {
-    private Long projectId;
+    private Long projetId;
     private String name;
     private String description;
     private LocalDateTime startDate;

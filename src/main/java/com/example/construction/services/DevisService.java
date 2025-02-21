@@ -51,11 +51,11 @@ public class DevisService {
     @Transactional
     public Devis creerDevis(Devis devis, Long projetId) {
         // Récupérer le projet associé
-        Project project = projectRepository.findById(projetId)
+        Projet projet = projectRepository.findById(projetId)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
 
         // Associer le devis au projet
-        devis.setProject(project);
+        devis.setProjet(projet);
 
         // Vérifier et associer les articles existants
         for (LigneDevis ligne : devis.getLignesDevis()) {
@@ -104,7 +104,7 @@ public class DevisService {
                 .orElseThrow(() -> new RuntimeException("Devis non trouvé"));
 
         // Vérifier si le projet a déjà un devis validé
-        boolean projetADejaUnDevisValide = devisRepository.existsByProjetAndStatut(devis.getProject(), DevisStatus.VALIDER);
+        boolean projetADejaUnDevisValide = devisRepository.existsByProjetAndStatut(devis.getProjet(), DevisStatus.VALIDER);
         if (projetADejaUnDevisValide) {
             throw new RuntimeException("Le projet a déjà un devis validé.");
         }

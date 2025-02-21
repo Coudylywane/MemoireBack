@@ -17,6 +17,6 @@ public class Validation {
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @JoinColumn(name = "projet_id", nullable = false)
+    private Projet projet;
 }

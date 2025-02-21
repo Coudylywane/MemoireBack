@@ -2,7 +2,7 @@ package com.example.construction.mapper;
 
 import com.example.construction.dto.ProjectDetailDto;
 import com.example.construction.dto.ProjectDto;
-import com.example.construction.models.Project;
+import com.example.construction.models.Projet;
 import com.example.construction.request.ProjectRequestDto;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
@@ -43,8 +43,8 @@ public interface MapStructMapper {
 //    SiteDto siteToSiteDto(Site site);
 //    ServiceTypeDto serviceTypeToServiceTypeDto(ServiceType serviceType);
 //    ParcelDto parcelToParcelDto(Parcel parcel);
-     ProjectDto projectToProjectDto(Project project);
-     ProjectDetailDto projectToProjectDetailDto(Project project);
+     ProjectDto projectToProjectDto(Projet project);
+     ProjectDetailDto projectToProjectDetailDto(Projet project);
 
     //    CommercializationPhaseAmortizationDto commercializationPhaseAmortizationToCommercializationPhaseAmortizationDto(CommercializationPhaseAmortization commercializationPhaseAmortization);
 //    ParcelConfigDto parcelConfigToParcelConfigDto(ParcelConfig parcelConfig);
@@ -122,8 +122,8 @@ public interface MapStructMapper {
 //    Check checkDtoToCheck(CheckDto checkDto);
 //    BankAccount bankAccountDtoToBankAccount(BankAccountDto bankAccountDto);
 //    Bank bankDtoToBank(BankDto bankDto);
-      Project ProjectDtoToProject(ProjectRequestDto projectDto) ;
-       Project ProjectDetailDtoToProject(ProjectDetailDto projectDto) ;
+      Projet ProjectDtoToProject(ProjectRequestDto projectDto) ;
+       Projet ProjectDetailDtoToProject(ProjectDetailDto projectDto) ;
 //    Tiers tiersDtoToTiers(TiersDto tiersDto);
 //    SiteTracking siteTrackingDtoToSiteTracking(SiteTrackingDto siteTrackingDto);
 //    SiteDocument siteDocumentDtoToSiteDocument(SiteDocumentDto siteDocumentDto);

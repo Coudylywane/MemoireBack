@@ -90,7 +90,7 @@ public class DevisController {
                 .orElseThrow(() -> new RuntimeException("Devis non trouvé"));
 
         // Vérifier si toutes les tâches du projet sont terminées
-        if (!projetService.toutesTachesTerminees(devis.getProject().getId())) {
+        if (!projetService.toutesTachesTerminees(devis.getProjet().getId())) {
             throw new RuntimeException("Toutes les tâches du projet doivent être terminées pour modifier les prix réels.");
         }
 

@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface ValidationRepository extends JpaRepository<Validation, Long> {
-    List<Validation> findByProjectId(Long projectId); // 🔍 Trouver toutes les validations d'un projet
+    List<Validation> findByProjetId(Long projetId); // 🔍 Trouver toutes les validations d'un projet
 }
 

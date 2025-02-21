@@ -8,7 +8,7 @@ import com.example.construction.dto.ProjectDetailDto;
 import com.example.construction.dto.ProjectDto;
 import com.example.construction.mapper.MapStructMapper;
 import com.example.construction.mapper.ModelMapperConfig;
-import com.example.construction.models.Project;
+import com.example.construction.models.Projet;
 import com.example.construction.request.ProjectRequestDto;
 import com.example.construction.response.ProjectResponseDto;
 import com.example.construction.services.ProjectService;
@@ -53,7 +53,7 @@ public class ProjectController {
         log.debug("Récupération des projets avec page={}, perPage={}, orderBy={}, direction={}", page, perPage, orderBy, direction);
         try {
             Pageable pageable = Util.getPageable(page, perPage, orderBy, direction);
-            Page<Project> result = projectService.getAllProject(pageable);
+            Page<Projet> result = projectService.getAllProject(pageable);
             // Vérification du résultat
             if (result.isEmpty()) {
                 log.warn("Aucun projet trouvé.");
@@ -95,7 +95,7 @@ public class ProjectController {
         if (projectRequestDto == null) {
           throw new IllegalArgumentException("Le projet ne peut pas être nul.");
         }
-        Project project = projectService.createProject(projectRequestDto);
+        Projet project = projectService.createProject(projectRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(project);
       } catch (IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(Map.of("error", "Erreur de validation", "message", e.getMessage()));
@@ -108,7 +108,7 @@ public class ProjectController {
 
   @PostMapping("/add-sites")
   public ResponseEntity<ProjectResponseDto> addSitesToProject(@RequestBody ProjectRequestDto projectRequestDto) {
-    Project updatedProject = projectService.addSitesToProject(projectRequestDto);
+    Projet updatedProject = projectService.addSitesToProject(projectRequestDto);
     ProjectResponseDto responseDto = projectService.mapProjectToResponseDto(updatedProject);
     return ResponseEntity.ok(responseDto);
   }
@@ -140,12 +140,12 @@ public class ProjectController {
 
     @PostMapping("/{projetId}/taches")
     public ResponseEntity<List<Tache>> ajouterTaches(@PathVariable Long projetId, @RequestBody List<Tache> nouvellesTaches) {
-        Project projet = projectRepository.findById(projetId)
+        Projet projet = projectRepository.findById(projetId)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
 
         // Associer les nouvelles tâches au projet
         for (Tache tache : nouvellesTaches) {
-            tache.setProjet(projet);
+            //tache.setProjet(projet);
         }
 
         // Sauvegarder les nouvelles tâches

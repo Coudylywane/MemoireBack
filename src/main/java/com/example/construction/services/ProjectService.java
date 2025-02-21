@@ -1,7 +1,7 @@
 package com.example.construction.services;
 
 import com.example.construction.mapper.MapStructMapper;
-import com.example.construction.models.Project;
+import com.example.construction.models.Projet;
 import com.example.construction.models.Tache;
 import com.example.construction.repositories.ArticleRepository;
 import com.example.construction.repositories.ProjectRepository;
@@ -28,35 +28,35 @@ public class ProjectService {
     private final TacheRepository tacheRepository ;
 
 
-    public Page<Project> getAllProject(Pageable pageable) {
+    public Page<Projet> getAllProject(Pageable pageable) {
         return projectRepository.findAll(pageable); // Retourner la liste des projets
     }
 
-    public Optional<Project> getProjectById(String projectId) {
+    public Optional<Projet> getProjectById(String projectId) {
         return null;
     }
 
-    public Project createProject(ProjectRequestDto projectRequestDto) {
+    public Projet createProject(ProjectRequestDto projectRequestDto) {
         if (projectRequestDto == null || projectRequestDto.getName() == null || projectRequestDto.getName().isEmpty()) {
             throw new IllegalArgumentException("Le nom du projet est obligatoire.");
         }
 
         // Convertir DTO en entité
-        Project project = mapStructMapper.ProjectDtoToProject(projectRequestDto);
+        Projet project = mapStructMapper.ProjectDtoToProject(projectRequestDto);
 
         // Enregistrer en base de données
         return projectRepository.save(project);
     }
 
-    public Project addSitesToProject(ProjectRequestDto projectRequestDto) {
+    public Projet addSitesToProject(ProjectRequestDto projectRequestDto) {
         return null;
     }
 
-    public ProjectResponseDto mapProjectToResponseDto(Project updatedProject) {
+    public ProjectResponseDto mapProjectToResponseDto(Projet updatedProject) {
         return null;
     }
 
-   public Project getById(String projectId) {
+   public Projet getById(String projectId) {
         return null;
     }
 

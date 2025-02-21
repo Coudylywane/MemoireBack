@@ -1,6 +1,6 @@
 package com.example.construction.services;
 
-import com.example.construction.models.Project;
+import com.example.construction.models.Projet;
 import com.example.construction.models.Validation;
 import com.example.construction.repositories.ProjectRepository;
 import com.example.construction.repositories.ValidationRepository;
@@ -21,18 +21,18 @@ public class ValidationService {
     }
 
     // ✅ Récupérer toutes les validations d'un projet
-    public List<Validation> getValidationsByProject(Long projectId) {
-        return validationRepository.findByProjectId(projectId);
+    public List<Validation> getValidationsByProject(Long projetId) {
+        return validationRepository.findByProjetId(projetId);
     }
 
     //  Ajouter une validation à un projet
-    public Validation addValidationToProject(Long projectId, String status) {
-        Project project = (Project) projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Projet non trouvé : " + projectId));
+    public Validation addValidationToProject(Long projetId, String status) {
+        Projet projet = (Projet) projectRepository.findById(projetId)
+                .orElseThrow(() -> new RuntimeException("Projet non trouvé : " + projetId));
 
         Validation validation = new Validation();
         validation.setStatus(status);
-        validation.setProject(project);
+        validation.setProjet(projet);
 
         return validationRepository.save(validation);
     }
