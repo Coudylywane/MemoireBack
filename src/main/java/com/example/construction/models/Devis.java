@@ -32,7 +32,7 @@ public class Devis {
 
     @ManyToOne
     @JoinColumn(name = "projet_id", nullable = false) // Un devis doit être lié à un projet
-    private Project project;
+    private Projet projet;
 
     // Méthode pour calculer le total du devis
     public double getTotal() {

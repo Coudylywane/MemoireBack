@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ProjectDto implements Serializable {
+public class ProjetDto implements Serializable {
     private String id;
     private String name;
     private String description;

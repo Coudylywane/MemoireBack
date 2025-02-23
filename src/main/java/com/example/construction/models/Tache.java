@@ -29,5 +29,5 @@ public class Tache {
 
     @ManyToOne
     @JoinColumn(name = "projet_id", nullable = false)
-    private Project projet;
+    private Projet projet;
 }

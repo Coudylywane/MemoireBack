@@ -1,6 +1,6 @@
 package com.example.construction.services;
 
-import com.example.construction.models.Project;
+import com.example.construction.models.Projet;
 import com.example.construction.models.Tache;
 import com.example.construction.repositories.TacheRepository;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 public class PlanningService {
     private final TacheRepository tacheRepository;
 
-    public void genererPlanning(Project projet) {
+    public void genererPlanning(Projet projet) {
         // Exemple de tâches prédéfinies
         List<Tache> taches = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class PlanningService {
         tacheRepository.saveAll(taches);
     }
 
-    public void regenererPlanning(Project projet) {
+    public void regenererPlanning(Projet projet) {
         // Récupérer toutes les tâches du projet
         List<Tache> taches = tacheRepository.findByProjetId(projet.getId());
 

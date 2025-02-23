@@ -1,22 +1,14 @@
 package com.example.construction.services;
 
-import com.example.construction.jwtutils.ValidationUtils;
 import com.example.construction.models.*;
 import com.example.construction.models.enumeration.DevisStatus;
 import com.example.construction.repositories.*;
 
-import javax.persistence.*;
-
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +17,7 @@ import java.util.Optional;
 public class DevisService {
     private final DevisRepository devisRepository;
     private final ArticleRepository articleRepository;
-    private final ProjectRepository projectRepository;
+    private final ProjetRepository projectRepository;
 
     //@Transactional
 //    public Devis creerDevis(Devis devis) {
@@ -51,11 +43,11 @@ public class DevisService {
     @Transactional
     public Devis creerDevis(Devis devis, Long projetId) {
         // Récupérer le projet associé
-        Project project = projectRepository.findById(projetId)
+        Projet projet = projectRepository.findById(projetId)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
 
         // Associer le devis au projet
-        devis.setProject(project);
+        devis.setProjet(projet);
 
         // Vérifier et associer les articles existants
         for (LigneDevis ligne : devis.getLignesDevis()) {
@@ -104,7 +96,7 @@ public class DevisService {
                 .orElseThrow(() -> new RuntimeException("Devis non trouvé"));
 
         // Vérifier si le projet a déjà un devis validé
-        boolean projetADejaUnDevisValide = devisRepository.existsByProjetAndStatut(devis.getProject(), DevisStatus.VALIDER);
+        boolean projetADejaUnDevisValide = devisRepository.existsByProjetAndStatut(devis.getProjet(), DevisStatus.VALIDER);
         if (projetADejaUnDevisValide) {
             throw new RuntimeException("Le projet a déjà un devis validé.");
         }

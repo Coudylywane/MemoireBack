@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProjectResponseDto {
+public class ProjetResponseDto {
     private Long projectId;
     private String projectName;
 }
