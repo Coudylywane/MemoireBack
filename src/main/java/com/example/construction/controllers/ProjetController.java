@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projets")
@@ -87,25 +88,22 @@ public class ProjetController {
     }
 
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Get project details by ID",
-            description = "Retrieves the details of a project based on its ID.",
-            tags = { "Projets" })
     @ApiResponse(responseCode = "200", description = "Project details retrieved successfully")
     @ApiResponse(responseCode = "404", description = "Project not found")
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public ResponseEntity<?> getProjectDetails(@PathVariable Long id) {
         log.debug("Récupération des détails du projet avec ID: {}", id);
         try {
-            // Récupérer le projet par son ID
             Projet projet = projetService.getProjetById(id);
             if (projet == null) {
                 log.warn("Aucun projet trouvé avec l'ID: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("error", "Projet non trouvé", "message", "Aucun projet trouvé avec l'ID: " + id));
             }
-            // Convertir l'entité Projet en DTO
+
+            // Mapper le projet et ses devis vers le DTO
             ProjetDto projetDto = modelMapper.map(projet, ProjetDto.class);
+
             return ResponseEntity.ok(projetDto);
         } catch (Exception e) {
             log.error("Erreur lors de la récupération des détails du projet: {}", e.getMessage(), e);
@@ -115,38 +113,35 @@ public class ProjetController {
     }
 
 
-  @PostMapping("/add-sites")
+
+    @PostMapping("/add-sites")
   public ResponseEntity<ProjetResponseDto> addSitesToProject(@RequestBody ProjetRequestDto projectRequestDto) {
     Projet updatedProject = projetService.addSitesToProject(projectRequestDto);
     ProjetResponseDto responseDto = projetService.mapProjectToResponseDto(updatedProject);
     return ResponseEntity.ok(responseDto);
   }
 
-    @GetMapping("/{projetId}/taches")
-    public ResponseEntity<List<Tache>> getTachesByProjet(@PathVariable Long projetId) {
-        List<Tache> taches = tacheRepository.findByProjetId(projetId);
-        return ResponseEntity.ok(taches);
-    }
+//    @GetMapping("/{projetId}/taches")
+//    public ResponseEntity<List<Tache>> getTachesByProjet(@PathVariable Long projetId) {
+//        List<Tache> taches = tacheRepository.findByProjetId(projetId);
+//        return ResponseEntity.ok(taches);
+//    }
 
 
-    @PostMapping("/{projetId}/taches")
-    public ResponseEntity<List<Tache>> ajouterTaches(@PathVariable Long projetId, @RequestBody List<Tache> nouvellesTaches) {
-        Projet projet = projectRepository.findById(projetId)
-                .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
-
-        // Associer les nouvelles tâches au projet
-        for (Tache tache : nouvellesTaches) {
-            tache.setProjet(projet);
-        }
-
-        // Sauvegarder les nouvelles tâches
-        List<Tache> tachesSauvegardees = tacheRepository.saveAll(nouvellesTaches);
-
-        // Régénérer le planning
-        planningService.regenererPlanning(projet);
-
-        return ResponseEntity.ok(tachesSauvegardees);
-    }
+//    @PostMapping("/{projetId}/taches")
+//    public ResponseEntity<List<Tache>> ajouterTaches(@PathVariable Long projetId, @RequestBody List<Tache> nouvellesTaches) {
+//        Projet projet = projectRepository.findById(projetId)
+//                .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
+//        // Associer les nouvelles tâches au projet
+//        for (Tache tache : nouvellesTaches) {
+//            tache.setProjet(projet);
+//        }
+//        // Sauvegarder les nouvelles tâches
+//        List<Tache> tachesSauvegardees = tacheRepository.saveAll(nouvellesTaches);
+//        // Régénérer le planning
+//        planningService.regenererPlanning(projet);
+//        return ResponseEntity.ok(tachesSauvegardees);
+//    }
 
     @PutMapping("/taches/{tacheId}/pourcentage")
     public ResponseEntity<Tache> mettreAJourPourcentage(
@@ -207,6 +202,15 @@ public class ProjetController {
             @PathVariable Long id,
             @RequestParam String status) {
         return ResponseEntity.ok(projetService.addValidationToProjet(id, status));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ProjetDto>> getAllProjects() {
+        List<Projet> projets = projetService.getAllProjects();
+        List<ProjetDto> dtoList = projets.stream()
+                .map(projet -> modelMapper.map(projet, ProjetDto.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
     }
 
 

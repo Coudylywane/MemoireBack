@@ -1,18 +1,23 @@
 package com.example.construction.config1;
 
-//@Configuration
-//@EnableWebMvcimplements WebMvcConfigurer
-public class CorsConfig  {
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-    /*@Override
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+
+    public CorsConfig() {
+        System.out.println("CorsConfig loaded!"); // Message de log pour vérifier le chargement
+    }
+
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
-        //WebMvcConfigurer.super.addCorsMappings(registry);
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200", "http://localhost:4200/")
-                .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD")
-                .allowedHeaders("Authorization","Content-Type","x-auth-token")
-                .allowCredentials(true)
-                .allowedHeaders("x-auth-token","X-Get-Header")
-                .maxAge(3000L);
-    }*/
+        System.out.println("Configuring CORS..."); // Message de log pour vérifier l'exécution
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:4200") // Autoriser Angular
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Autoriser les méthodes HTTP
+                .allowedHeaders("*") // Autoriser tous les headers
+                .allowCredentials(true); // Autoriser les cookies
+    }
 }

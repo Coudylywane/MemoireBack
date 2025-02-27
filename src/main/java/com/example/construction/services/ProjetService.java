@@ -32,6 +32,10 @@ public class ProjetService {
     public Page<Projet> getAllProject(Pageable pageable) {
         return projetRepository.findAll(pageable); // Retourner la liste des projets
     }
+    public List<Projet> getAllProjects() {
+        return projetRepository.findAll();
+    }
+
 
 
 
@@ -61,10 +65,10 @@ public class ProjetService {
         return projetRepository.findById(id).orElse(null);
     }
 
-    public boolean toutesTachesTerminees(Long projetId) {
-        List<Tache> taches = tacheRepository.findByProjetId(projetId);
-        return taches.stream().allMatch(tache -> tache.getStatut().equals("Terminée"));
-    }
+//    public boolean toutesTachesTerminees(Long projetId) {
+//        List<Tache> taches = tacheRepository.findByProjetId(projetId);
+//        return taches.stream().allMatch(tache -> tache.getStatut().equals("Terminée"));
+//    }
 
     public Projet addValidationToProjet(Long id, String status) {
         // Récupérer le projet par son ID

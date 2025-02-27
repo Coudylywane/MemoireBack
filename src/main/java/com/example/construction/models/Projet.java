@@ -14,7 +14,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -50,6 +52,12 @@ public class Projet {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Devis> devis = new ArrayList<>();
+
+    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjetTache> projetTaches = new HashSet<>();
 
 //    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Validation> validations;
