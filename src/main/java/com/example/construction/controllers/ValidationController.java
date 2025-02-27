@@ -18,9 +18,9 @@ public class ValidationController {
     }
 
     //  1. Récupérer les validations d'un projet
-    @GetMapping("/projet/{projetId}")
+    @GetMapping("/project/{projetId}")
     public ResponseEntity<List<Validation>> getValidationsByProject(@PathVariable Long projetId) {
-        return ResponseEntity.ok(validationService.getValidationsByProject(projetId));
+        return ResponseEntity.ok(validationService.getValidationsByProjet(projetId));
     }
 
     //  2. Ajouter une validation à un projet
@@ -28,7 +28,7 @@ public class ValidationController {
     public ResponseEntity<Validation> addValidationToProject(
             @PathVariable Long projetId,
             @RequestParam String status) {
-        return ResponseEntity.ok(validationService.addValidationToProject(projetId, status));
+        return ResponseEntity.ok(validationService.addValidationToProjet(projetId, status));
     }
 
     //  3. Mettre à jour une validation

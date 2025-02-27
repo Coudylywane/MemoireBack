@@ -6,7 +6,7 @@ import com.example.construction.models.enumeration.DevisStatus;
 import com.example.construction.repositories.DevisRepository;
 import com.example.construction.services.DevisService;
 import com.example.construction.services.PdfService;
-import com.example.construction.services.ProjectService;
+import com.example.construction.services.ProjetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class DevisController {
     private final DevisService devisService;
     private final PdfService pdfService;
     private final DevisRepository devisRepository ;
-    private final ProjectService projetService ;
+    private final ProjetService projetService ;
 
     @PostMapping
     public ResponseEntity<Devis> creerDevis(@RequestBody Devis devis, @RequestParam Long projetId) {

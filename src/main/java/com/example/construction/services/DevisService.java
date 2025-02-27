@@ -1,22 +1,14 @@
 package com.example.construction.services;
 
-import com.example.construction.jwtutils.ValidationUtils;
 import com.example.construction.models.*;
 import com.example.construction.models.enumeration.DevisStatus;
 import com.example.construction.repositories.*;
 
-import javax.persistence.*;
-
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +17,7 @@ import java.util.Optional;
 public class DevisService {
     private final DevisRepository devisRepository;
     private final ArticleRepository articleRepository;
-    private final ProjectRepository projectRepository;
+    private final ProjetRepository projectRepository;
 
     //@Transactional
 //    public Devis creerDevis(Devis devis) {

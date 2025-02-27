@@ -28,6 +28,6 @@ public class Tache {
     private int pourcentageExecution; // Pourcentage d'exécution (0 à 100)
 
     @ManyToOne
-    @JoinColumn(name = "projet_id")
+    @JoinColumn(name = "projet_id", nullable = false)
     private Projet projet;
 }

@@ -93,6 +93,4 @@ public class UtilisateurFixture {
             System.out.println("default admin added successfully");
         }
     }
-
-
 }

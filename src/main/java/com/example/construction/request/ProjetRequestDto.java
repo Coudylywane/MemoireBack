@@ -8,8 +8,8 @@ import java.util.List;
 
 @Setter
 @Getter
-public class ProjectRequestDto {
-    private Long projetId;
+public class ProjetRequestDto {
+    private Long projectId;
     private String name;
     private String description;
     private LocalDateTime startDate;

@@ -1,5 +1,9 @@
 package com.example.construction.models;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +32,9 @@ public class Projet {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "status", columnDefinition = "TEXT")
+    private String status;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Column(name = "start_date")
 
@@ -44,19 +51,12 @@ public class Projet {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    //@OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Validation> validations;
-    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
-    private List<Validation> validations;
-
-
-    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Devis> devis = new ArrayList<>();
-
-    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tache> taches ;
-
-
-
-
+//    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Validation> validations;
+//
+//    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Devis> devis = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Tache> taches = new ArrayList<>();
 }

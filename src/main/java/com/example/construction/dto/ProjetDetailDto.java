@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ProjectDetailDto {
+public class ProjetDetailDto {
     private String id;
     private String name;
     private String description;

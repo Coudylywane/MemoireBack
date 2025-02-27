@@ -1,17 +1,17 @@
 package com.example.construction.controllers;
 import com.example.construction.models.Tache;
-import com.example.construction.repositories.ProjectRepository;
+import com.example.construction.repositories.ProjetRepository;
 import com.example.construction.repositories.TacheRepository;
 import com.example.construction.services.PlanningService;
 import org.modelmapper.ModelMapper;
-import com.example.construction.dto.ProjectDetailDto;
-import com.example.construction.dto.ProjectDto;
+import com.example.construction.dto.ProjetDetailDto;
+import com.example.construction.dto.ProjetDto;
 import com.example.construction.mapper.MapStructMapper;
 import com.example.construction.mapper.ModelMapperConfig;
 import com.example.construction.models.Projet;
-import com.example.construction.request.ProjectRequestDto;
-import com.example.construction.response.ProjectResponseDto;
-import com.example.construction.services.ProjectService;
+import com.example.construction.request.ProjetRequestDto;
+import com.example.construction.response.ProjetResponseDto;
+import com.example.construction.services.ProjetService;
 import com.example.construction.utils.RequestHeaderParser;
 import com.example.construction.utils.Util;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,19 +33,19 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/api/Projets")
 @Slf4j
 @RequiredArgsConstructor
-public class ProjectController {
+public class ProjetController {
     private final ModelMapper modelMapper; // Injection correcte de ModelMapper
-    private final ProjectService projectService;
+    private final ProjetService projetService;
     private final TacheRepository tacheRepository ;
-    private final ProjectRepository projectRepository;
+    private final ProjetRepository ProjetRepository;
     private final PlanningService planningService;
 
 
     @GetMapping()
-    public ResponseEntity<Page<ProjectDto>> getAllProjects(
+    public ResponseEntity<Page<ProjetDto>> getAllProjets(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "perPage", required = false, defaultValue = "25") int perPage,
             @RequestParam(value = "orderBy", required = false, defaultValue = "") String orderBy,
@@ -53,14 +53,14 @@ public class ProjectController {
         log.debug("Récupération des projets avec page={}, perPage={}, orderBy={}, direction={}", page, perPage, orderBy, direction);
         try {
             Pageable pageable = Util.getPageable(page, perPage, orderBy, direction);
-            Page<Projet> result = projectService.getAllProject(pageable);
+            Page<Projet> result = projetService.getAllProject(pageable);
             // Vérification du résultat
             if (result.isEmpty()) {
                 log.warn("Aucun projet trouvé.");
             } else {
                 log.debug("{} projets trouvés.", result.getTotalElements());
             }
-            Page<ProjectDto> dtoPage = result.map(project -> modelMapper.map(project, ProjectDto.class));
+            Page<ProjetDto> dtoPage = result.map(Projet -> modelMapper.map(Projet, ProjetDto.class));
             return ResponseEntity.ok(dtoPage);
         } catch (RuntimeException e) {
             log.error("Erreur lors de la récupération des projets: {}", e.getMessage(), e);
@@ -70,13 +70,13 @@ public class ProjectController {
 
 
 //    @GetMapping("/{memberNumber}/{id}")
-//    public ResponseEntity<ProjectDetailDto> getProjectById(@PathVariable String memberNumber, @PathVariable String id) {
+//    public ResponseEntity<ProjetDetailDto> getProjetById(@PathVariable String memberNumber, @PathVariable String id) {
 //        if (!RequestHeaderParser.verifyUserName(memberNumber)) {
 //            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 //        }
 //        try {
-//            Optional<Project> project = projectService.getProjectById(id);
-//            return ResponseEntity.status(HttpStatus.OK).body(mapStructMapper.projectToProjectDetailDto(project.get()));
+//            Optional<Projet> Projet = ProjetService.getProjetById(id);
+//            return ResponseEntity.status(HttpStatus.OK).body(mapStructMapper.ProjetToProjetDetailDto(Projet.get()));
 //        } catch (IllegalArgumentException ex) {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 //        }
@@ -84,19 +84,19 @@ public class ProjectController {
 
     @PostMapping("/create")
     @Operation(
-            summary = "Create a new project",
-            description = "Creates a new project based on the provided project request data.",
-            tags = { "Projects" })
-    @ApiResponse(responseCode = "200", description = "Project created successfully")
+            summary = "Create a new Projet",
+            description = "Creates a new Projet based on the provided Projet request data.",
+            tags = { "Projets" })
+    @ApiResponse(responseCode = "200", description = "Projet created successfully")
     @ApiResponse(responseCode = "400", description = "Bad request due to validation errors")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public ResponseEntity<?> createProject(@RequestBody ProjectRequestDto projectRequestDto) {
+    public ResponseEntity<?> createProjet(@RequestBody ProjetRequestDto ProjetRequestDto) {
       try {
-        if (projectRequestDto == null) {
+        if (ProjetRequestDto == null) {
           throw new IllegalArgumentException("Le projet ne peut pas être nul.");
         }
-        Projet project = projectService.createProject(projectRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(project);
+        Projet Projet = projetService.createProject(ProjetRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(Projet);
       } catch (IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(Map.of("error", "Erreur de validation", "message", e.getMessage()));
       } catch (DataIntegrityViolationException e) {
@@ -107,9 +107,9 @@ public class ProjectController {
     }
 
   @PostMapping("/add-sites")
-  public ResponseEntity<ProjectResponseDto> addSitesToProject(@RequestBody ProjectRequestDto projectRequestDto) {
-    Projet updatedProject = projectService.addSitesToProject(projectRequestDto);
-    ProjectResponseDto responseDto = projectService.mapProjectToResponseDto(updatedProject);
+  public ResponseEntity<ProjetResponseDto> addSitesToProjet(@RequestBody ProjetRequestDto ProjetRequestDto) {
+    Projet updatedProjet = projetService.addSitesToProject(ProjetRequestDto);
+    ProjetResponseDto responseDto = projetService.mapProjectToResponseDto(updatedProjet);
     return ResponseEntity.ok(responseDto);
   }
 
@@ -121,7 +121,7 @@ public class ProjectController {
 
 //    @PostMapping("/{projetId}/taches")
 //    public ResponseEntity<List<Tache>> ajouterTaches(@PathVariable Long projetId, @RequestBody List<Tache> nouvellesTaches) {
-//        Project projet = projectRepository.findById(projetId)
+//        Projet projet = ProjetRepository.findById(projetId)
 //                .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
 //
 //        // Associer les nouvelles tâches au projet
@@ -140,12 +140,12 @@ public class ProjectController {
 
     @PostMapping("/{projetId}/taches")
     public ResponseEntity<List<Tache>> ajouterTaches(@PathVariable Long projetId, @RequestBody List<Tache> nouvellesTaches) {
-        Projet projet = projectRepository.findById(projetId)
+        Projet projet = ProjetRepository.findById(projetId)
                 .orElseThrow(() -> new RuntimeException("Projet non trouvé"));
 
         // Associer les nouvelles tâches au projet
         for (Tache tache : nouvellesTaches) {
-            //tache.setProjet(projet);
+            tache.setProjet(projet);
         }
 
         // Sauvegarder les nouvelles tâches
