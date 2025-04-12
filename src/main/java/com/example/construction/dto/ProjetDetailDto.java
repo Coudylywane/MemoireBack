@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class ProjetDetailDto {
     private String id;
     private String name;
+    private String status;
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime startDate;

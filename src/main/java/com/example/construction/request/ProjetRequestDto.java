@@ -15,6 +15,7 @@ public class ProjetRequestDto {
     private LocalDateTime startDate;
     private LocalDateTime endDateProvisioning;
     private LocalDateTime endDate;
+    private String status;
     private List<String> validationStatuses;
     //private List<SiteRequestDto> sites;
 

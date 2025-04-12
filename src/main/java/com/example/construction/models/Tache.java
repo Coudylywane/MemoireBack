@@ -8,6 +8,8 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -27,7 +29,6 @@ public class Tache {
     private String statut; // Par exemple : "À faire", "En cours", "Terminée"
     private int pourcentageExecution; // Pourcentage d'exécution (0 à 100)
 
-    @ManyToOne
-    @JoinColumn(name = "projet_id", nullable = false)
-    private Projet projet;
+    @OneToMany(mappedBy = "tache", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjetTache> projetTaches = new HashSet<>();
 }

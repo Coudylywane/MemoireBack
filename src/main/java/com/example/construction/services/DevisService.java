@@ -1,5 +1,6 @@
 package com.example.construction.services;
 
+import com.example.construction.dto.DevisDto;
 import com.example.construction.models.*;
 import com.example.construction.models.enumeration.DevisStatus;
 import com.example.construction.repositories.*;
@@ -7,10 +8,12 @@ import com.example.construction.repositories.*;
 import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,8 @@ public class DevisService {
     private final DevisRepository devisRepository;
     private final ArticleRepository articleRepository;
     private final ProjetRepository projectRepository;
+    private final ModelMapper modelMapper; // Injection correcte de ModelMapper
+
 
     //@Transactional
 //    public Devis creerDevis(Devis devis) {
@@ -64,13 +69,26 @@ public class DevisService {
         // Sauvegarder le devis
         return devisRepository.save(devis);
     }
-    public List<Devis> obtenirTousLesDevis() {
-        return devisRepository.findAll();
+
+    public List<DevisDto> obtenirTousLesDevis() {
+        return devisRepository.findAll()
+                .stream()
+                .map(devis -> modelMapper.map(devis, DevisDto.class))
+                .collect(Collectors.toList());
     }
+
+//    public List<Devis> obtenirTousLesDevis() {
+//        return devisRepository.findAll();
+//    }
 
     public Optional<Devis> obtenirDevisParId(Long id) {
         return devisRepository.findById(id);
     }
+
+    public List<Devis> obtenirDevisParProjetId(Long projetId) {
+        return devisRepository.findByProjetId(projetId);
+    }
+
 
     @Transactional
     public Devis mettreAJourStatut(Long devisId, DevisStatus nouveauStatut) {
