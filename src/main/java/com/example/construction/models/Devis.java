@@ -34,6 +34,9 @@ public class Devis {
     @JoinColumn(name = "projet_id", nullable = false) // Un devis doit être lié à un projet
     private Projet projet;
 
+    @OneToMany(mappedBy = "devis", cascade = CascadeType.ALL)
+    private List<Planning> plannings = new ArrayList<>();
+
     // Méthode pour calculer le total du devis
     public double getTotal() {
         return lignesDevis.stream()

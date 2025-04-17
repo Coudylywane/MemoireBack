@@ -124,4 +124,7 @@ public class DevisController {
         Map<Long, Double> differences = devis.calculerDifferencesPrix();
         return ResponseEntity.ok(differences);
     }
+
+    // Existing endpoint: Get devis by projetId
+
 }

@@ -1,55 +1,52 @@
 package com.example.construction.services;
 
+import com.example.construction.models.Devis;
+import com.example.construction.models.Planning;
 import com.example.construction.models.Projet;
 import com.example.construction.models.Tache;
-import com.example.construction.repositories.TacheRepository;
-import lombok.AllArgsConstructor;
+import com.example.construction.repositories.DevisRepository;
+import com.example.construction.repositories.PlanningRepository;
+import com.example.construction.repositories.ProjetRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class PlanningService {
-    private final TacheRepository tacheRepository;
+    @Autowired
+    private PlanningRepository planningRepository;
 
-//    @Transactional
-//    public void genererPlanning(List<Tache> tachesDto) {
-//        for (Tache tacheDto : tachesDto) {
-//            Tache tache = tacheRepository.findById(tacheDto.getId())
-//                    .orElseThrow(() -> new RuntimeException("Tâche introuvable avec ID : " + tacheDto.getId()));
-//
-//            // Mettre à jour uniquement les dates de début et de fin
-//            tache.setDateDebut(LocalDate.parse(tacheDto.getDateDebut()));
-//            tache.setDateFin(LocalDate.parse(tacheDto.getDateFin()));
-//            tache.setStatut("PLANIFIÉ"); // Changer le statut à "PLANIFIÉ" (ou autre selon le besoin)
-//
-//            tacheRepository.save(tache);
-//        }
-//    }
+    @Autowired
+    private DevisRepository devisRepository;
 
-//    public void regenererPlanning(Projet projet) {
-//        // Récupérer toutes les tâches du projet
-//        List<Tache> taches = tacheRepository.findByProjetId(projet.getId());
-//
-//        // Trier les tâches par date de début (si nécessaire)
-//        taches.sort(Comparator.comparing(Tache::getDateDebut));
-//
-//        // Recalculer les dates de début et de fin
-//        LocalDate dateDebutProjet = LocalDate.now(); // Ou utiliser la date de début du projet
-//        for (Tache tache : taches) {
-//            tache.setDateDebut(dateDebutProjet);
-//            tache.setDateFin(dateDebutProjet.plusDays(tache.getDureeEstimee()));
-//
-//            // Mettre à jour la date de début pour la prochaine tâche
-//            dateDebutProjet = tache.getDateFin().plusDays(1); // Ajouter un jour de délai entre les tâches
-//        }
-//
-//        // Sauvegarder les tâches mises à jour
-//        tacheRepository.saveAll(taches);
-//    }
+    @Autowired
+    private ProjetRepository projetRepository;
 
+    public Planning createPlanning(Long devisId, List<Tache> taches) {
+        Devis devis = devisRepository.findById(devisId)
+                .orElseThrow(() -> new RuntimeException("Devis not found"));
+        Projet projet = devis.getProjet();
+        if (projet == null) {
+            throw new RuntimeException("Projet not found for Devis");
+        }
+
+        Planning planning = new Planning();
+        planning.setDevis(devis);
+        planning.setProjet(projet);
+
+        // Filter selected tasks and associate with planning
+        taches.stream()
+                .filter(tache -> tache.getDateDebut() != null && tache.getDateFin() != null)
+                .forEach(tache -> {
+                    tache.setPlanning(planning);
+                    planning.getTaches().add(tache);
+                });
+
+        return planningRepository.save(planning);
+    }
+
+    public Planning getPlanningByDevisId(Long devisId) {
+        return planningRepository.findByDevisId(devisId);
+    }
 }

@@ -23,28 +23,6 @@ public class DevisService {
     private final ProjetRepository projectRepository;
     private final ModelMapper modelMapper; // Injection correcte de ModelMapper
 
-
-    //@Transactional
-//    public Devis creerDevis(Devis devis) {
-//        for (LigneDevis ligne : devis.getLignesDevis()) {
-//            Article article = ligne.getArticle();
-//
-//            // Vérifier si l'article existe déjà dans la base de données
-//            Optional<Article> existingArticle = articleRepository.findByDesignation(article.getDesignation());
-//
-//            if (existingArticle.isPresent()) {
-//                // Utiliser l'article existant
-//                ligne.setArticle(existingArticle.get());
-//            } else {
-//                // Lever une exception si l'article n'existe pas
-//                throw new RuntimeException("L'article '" + article.getDesignation() + "' n'existe pas dans la base de données.");
-//            }
-//        }
-//
-//        // Sauvegarder le devis
-//        return devisRepository.save(devis);
-//    }
-
     @Transactional
     public Devis creerDevis(Devis devis, Long projetId) {
         // Récupérer le projet associé
@@ -123,4 +101,8 @@ public class DevisService {
         devis.setStatut(DevisStatus.VALIDER);
         return devisRepository.save(devis);
     }
+
+    // Fetch devis by projetId
+
+
 }
