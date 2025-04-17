@@ -1,18 +1,16 @@
-package com.example.construction.models;
-
-import javax.persistence.*;
-import lombok.AllArgsConstructor;
+package com.example.construction.dto;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Article {
-
+public class ArticleDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,32 +49,5 @@ public class Article {
     // Prix total pour cet article basé sur la quantité et le prix du devis
     @Transient
     private Double totalPrice;
-
-    // Méthode pour supprimer l'article sans le supprimer de la base de données
-    public void softDelete() {
-        this.status = "Archive";
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "zoneStock", referencedColumnName = "id")
-    private ZoneStock zoneStock;
-
-    @ManyToOne
-    @JoinColumn(name = "uniteMesure", referencedColumnName = "id")
-    private UniteMesure uniteMesure;
-
-    @ManyToOne
-    @JoinColumn(name = "typeArticle", referencedColumnName = "id")
-    private TypeArticle typeArticle;
-
-    // Calcul du prix total en fonction du prix du devis et de la quantité
-    @PrePersist
-    @PreUpdate
-    public void calculateTotalPrice() {
-        if (this.prixDevis != null && this.quantity != null) {
-            this.totalPrice = this.prixDevis * this.quantity;
-        } else {
-            this.totalPrice = 0.0;
-        }
-    }
+    
 }

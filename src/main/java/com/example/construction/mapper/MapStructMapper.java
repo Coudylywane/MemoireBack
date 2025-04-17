@@ -1,8 +1,11 @@
 package com.example.construction.mapper;
 
+import com.example.construction.dto.ArticleDto;
 import com.example.construction.dto.ProjetDetailDto;
 import com.example.construction.dto.ProjetDto;
+import com.example.construction.models.Article;
 import com.example.construction.models.Projet;
+import com.example.construction.request.ArticleRequestDto;
 import com.example.construction.request.ProjetRequestDto;
 import org.mapstruct.Mapper;
 
@@ -44,6 +47,7 @@ public interface MapStructMapper {
 //    ParcelDto parcelToParcelDto(Parcel parcel);
      ProjetDto projetToProjetDto(Projet projet);
      ProjetDetailDto projetToProjetDetailDto(Projet project);
+    ArticleDto ArticleDtoToArticle (Article article) ;
 
     //    CommercializationPhaseAmortizationDto commercializationPhaseAmortizationToCommercializationPhaseAmortizationDto(CommercializationPhaseAmortization commercializationPhaseAmortization);
 //    ParcelConfigDto parcelConfigToParcelConfigDto(ParcelConfig parcelConfig);
@@ -121,8 +125,9 @@ public interface MapStructMapper {
 //    Check checkDtoToCheck(CheckDto checkDto);
 //    BankAccount bankAccountDtoToBankAccount(BankAccountDto bankAccountDto);
 //    Bank bankDtoToBank(BankDto bankDto);
-      Projet ProjetDtoToProjet(ProjetRequestDto projetDto) ;
-       Projet ProjetDetailDtoToProjet(ProjetDetailDto projectDto) ;
+    Projet ProjetDtoToProjet(ProjetRequestDto projetDto) ;
+    Article ArticleDtoToArticle(ArticleRequestDto articleDto) ;
+    Projet ProjetDetailDtoToProjet(ProjetDetailDto projectDto) ;
 //    Tiers tiersDtoToTiers(TiersDto tiersDto);
 //    SiteTracking siteTrackingDtoToSiteTracking(SiteTrackingDto siteTrackingDto);
 //    SiteDocument siteDocumentDtoToSiteDocument(SiteDocumentDto siteDocumentDto);

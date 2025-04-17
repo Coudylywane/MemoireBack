@@ -24,7 +24,7 @@ public class ValidationController {
     }
 
     //  2. Ajouter une validation à un projet
-    @PostMapping("/project/{projectId}")
+    @PostMapping("/projet/{projetId}")
     public ResponseEntity<Validation> addValidationToProject(
             @PathVariable Long projetId,
             @RequestParam String status) {

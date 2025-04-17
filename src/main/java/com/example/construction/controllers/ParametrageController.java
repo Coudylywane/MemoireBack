@@ -253,7 +253,7 @@ public class ParametrageController {
 
     ///////////////////////////////////// TYPE ARTICLE ///////////////////////////////////////////////////////////
 
-//Ajout
+
     @PostMapping("/typeArticles")
     public ResponseEntity<?> addTypeArticleToFamily(@RequestBody TypeArticle typeArticle) {
         try {
