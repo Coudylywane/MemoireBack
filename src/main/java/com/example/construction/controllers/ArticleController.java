@@ -61,7 +61,7 @@ public class ArticleController {
     //}
 
     @PostMapping("/article-add")
-    public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOException {
+public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOException {
     try {
         System.out.println("Données reçues: " + article);
         ResponseEntity<Object> addedArticle = articleService.addArticle(article);

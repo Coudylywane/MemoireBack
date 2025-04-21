@@ -2,7 +2,9 @@ package com.example.construction.auth;
 
 
 import com.example.construction.config1.JwtService;
+import com.example.construction.models.Role;
 import com.example.construction.models.Utilisateur;
+import com.example.construction.repositories.RoleRepository;
 import com.example.construction.repositories.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,13 +20,17 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RoleRepository roleRepository;
   //  private JwtUser JwtUser;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+
+
         var user = Utilisateur.builder()
-                .prenom(registerRequest.getFirstname())
-                .nom(registerRequest.getLastname())
+                .prenom(registerRequest.getPrenom())
+                .nom(registerRequest.getNom())
                 .login(registerRequest.getLogin())
+                .telephoneString(registerRequest.getTelephoneString())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole())
                 .build();
