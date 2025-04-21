@@ -38,7 +38,7 @@ public class DevisController {
 
     @GetMapping
     public List<DevisDto> obtenirTousLesDevis() {
-        return devisService.obtenirTousLesDevis();
+        return devisService.getAllDevis();
     }
 
     @GetMapping("/projet/{projetId}")
@@ -124,4 +124,7 @@ public class DevisController {
         Map<Long, Double> differences = devis.calculerDifferencesPrix();
         return ResponseEntity.ok(differences);
     }
+
+    // Existing endpoint: Get devis by projetId
+
 }

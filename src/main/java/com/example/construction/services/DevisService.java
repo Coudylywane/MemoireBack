@@ -21,29 +21,9 @@ public class DevisService {
     private final DevisRepository devisRepository;
     private final ArticleRepository articleRepository;
     private final ProjetRepository projectRepository;
-    private final ModelMapper modelMapper; // Injection correcte de ModelMapper
-
-
-    //@Transactional
-//    public Devis creerDevis(Devis devis) {
-//        for (LigneDevis ligne : devis.getLignesDevis()) {
-//            Article article = ligne.getArticle();
-//
-//            // Vérifier si l'article existe déjà dans la base de données
-//            Optional<Article> existingArticle = articleRepository.findByDesignation(article.getDesignation());
-//
-//            if (existingArticle.isPresent()) {
-//                // Utiliser l'article existant
-//                ligne.setArticle(existingArticle.get());
-//            } else {
-//                // Lever une exception si l'article n'existe pas
-//                throw new RuntimeException("L'article '" + article.getDesignation() + "' n'existe pas dans la base de données.");
-//            }
-//        }
-//
-//        // Sauvegarder le devis
-//        return devisRepository.save(devis);
-//    }
+    private final ModelMapper modelMapper;
+    private final PlanningRepository planningRepository ;
+    // Injection correcte de ModelMapper
 
     @Transactional
     public Devis creerDevis(Devis devis, Long projetId) {
@@ -76,6 +56,21 @@ public class DevisService {
                 .map(devis -> modelMapper.map(devis, DevisDto.class))
                 .collect(Collectors.toList());
     }
+
+    public List<DevisDto> getAllDevis() {
+        List<Devis> devisList = devisRepository.findAll();
+        return devisList.stream().map(devis -> {
+            DevisDto dto = new DevisDto();
+            dto.setId(devis.getId());
+            dto.setDateCreation(devis.getDateCreation());
+            dto.setStatut(devis.getStatut());
+            // Check if planning exists
+            Planning planning = planningRepository.findByDevisId(devis.getId());
+            dto.setPlanningId(planning != null ? planning.getId() : null);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 
 //    public List<Devis> obtenirTousLesDevis() {
 //        return devisRepository.findAll();
@@ -123,4 +118,8 @@ public class DevisService {
         devis.setStatut(DevisStatus.VALIDER);
         return devisRepository.save(devis);
     }
+
+    // Fetch devis by projetId
+
+
 }

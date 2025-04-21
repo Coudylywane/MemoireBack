@@ -28,7 +28,8 @@ public class Tache {
     private LocalDate dateFin;
     private String statut; // Par exemple : "À faire", "En cours", "Terminée"
     private int pourcentageExecution; // Pourcentage d'exécution (0 à 100)
-
+    @ManyToOne
+    private Planning planning;
     @OneToMany(mappedBy = "tache", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjetTache> projetTaches = new HashSet<>();
 }

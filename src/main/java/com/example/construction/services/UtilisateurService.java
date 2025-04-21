@@ -160,12 +160,22 @@ public class UtilisateurService {
             SecurityContext context = SecurityContextHolder.getContext();
             Authentication authentication = context.getAuthentication();
             String login = "";
+
             if (authentication.getPrincipal() instanceof UserPrincipal) {
                 Utilisateur user = (Utilisateur) authentication.getPrincipal();
                 login = user.getLogin();
+
+
             }
-            if (authentication.getPrincipal() instanceof String)
-                login = (String) authentication.getPrincipal();
+            if (authentication.getPrincipal() instanceof UserDetails userDetails) {
+                login = userDetails.getUsername();
+
+            }
+            if (authentication.getPrincipal() instanceof String username) {
+                login = username;
+
+            }
+            log.info("login connected user : " + login);
             return utilisateurRepository
                     .findByLogin(login)
                     .orElse(null);
