@@ -48,6 +48,11 @@ public class Article {
     @Column(nullable = false)
     private Integer quantity;
 
+
+    // La quantite seuil qui vient verifier  le reste 
+    @Column(nullable = true)
+    private Integer quantiteSeuil;
+
     // Prix total pour cet article basé sur la quantité et le prix du devis
     @Transient
     private Double totalPrice;
@@ -69,6 +74,10 @@ public class Article {
     @JoinColumn(name = "typeArticle", referencedColumnName = "id")
     private TypeArticle typeArticle;
 
+    @ManyToOne
+    @JoinColumn(name = "fournisseur", referencedColumnName = "id")
+    private Fournisseur fournisseur;
+    
     // Calcul du prix total en fonction du prix du devis et de la quantité
     @PrePersist
     @PreUpdate
