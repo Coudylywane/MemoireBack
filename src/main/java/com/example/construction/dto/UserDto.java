@@ -1,5 +1,6 @@
 package com.example.construction.dto;
 
+import com.example.construction.models.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ public class UserDto {
     private String prenom;
     private String telephoneString;
     private boolean archive;
-
+    private Role role;
 
 
 

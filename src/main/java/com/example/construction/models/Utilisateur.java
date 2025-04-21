@@ -13,7 +13,6 @@ import java.util.Collection;
 @Getter
 @Setter
 @Entity
-@JsonFilter("passwordFilter")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

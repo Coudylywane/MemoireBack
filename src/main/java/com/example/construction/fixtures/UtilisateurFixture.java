@@ -74,7 +74,9 @@ public class UtilisateurFixture {
             Role[] profils = {
                     new Role(null, "SUPER_ADMIN"),
                     new Role(null, "ADMIN"),
-                    new Role(null, "VENDEUR")
+                    new Role(null, "S"),
+                    new Role(null, "CP"),
+                    new Role(null, "GS")
             };
             utilisateurService.addAllRole(Arrays.asList(profils));
             System.out.println(utilisateurService.addAllRole(Arrays.asList(profils)));
