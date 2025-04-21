@@ -7,10 +7,13 @@ import com.example.construction.models.Tache;
 import com.example.construction.repositories.DevisRepository;
 import com.example.construction.repositories.PlanningRepository;
 import com.example.construction.repositories.ProjetRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlanningService {
@@ -48,5 +51,32 @@ public class PlanningService {
 
     public Planning getPlanningByDevisId(Long devisId) {
         return planningRepository.findByDevisId(devisId);
+    }
+
+    public Planning getPlanning(Long devisId) {
+        Logger logger = LoggerFactory.getLogger(getClass());
+
+        if (devisId == null) {
+            logger.error("devisId cannot be null");
+            throw new IllegalArgumentException("devisId cannot be null");
+        }
+
+        // Vérifier si le devis existe
+        Devis devis = devisRepository.findById(devisId)
+                .orElseThrow(() -> {
+                    logger.error("Devis not found for id: {}", devisId);
+                    return new RuntimeException("Devis not found");
+                });
+
+        // Récupérer le planning
+        Optional<Planning> planningOpt = planningRepository.findByDevis(devisId);
+        if (planningOpt.isEmpty()) {
+            logger.warn("No planning found for devis id: {}", devisId);
+            return null;
+        }
+
+        Planning planning = planningOpt.get();
+        logger.info("Planning found with id: {} for devis id: {}", planning.getId(), devisId);
+        return planning;
     }
 }

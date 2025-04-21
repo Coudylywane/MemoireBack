@@ -38,7 +38,7 @@ public class DevisController {
 
     @GetMapping
     public List<DevisDto> obtenirTousLesDevis() {
-        return devisService.obtenirTousLesDevis();
+        return devisService.getAllDevis();
     }
 
     @GetMapping("/projet/{projetId}")

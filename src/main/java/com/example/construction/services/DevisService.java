@@ -21,7 +21,9 @@ public class DevisService {
     private final DevisRepository devisRepository;
     private final ArticleRepository articleRepository;
     private final ProjetRepository projectRepository;
-    private final ModelMapper modelMapper; // Injection correcte de ModelMapper
+    private final ModelMapper modelMapper;
+    private final PlanningRepository planningRepository ;
+    // Injection correcte de ModelMapper
 
     @Transactional
     public Devis creerDevis(Devis devis, Long projetId) {
@@ -54,6 +56,21 @@ public class DevisService {
                 .map(devis -> modelMapper.map(devis, DevisDto.class))
                 .collect(Collectors.toList());
     }
+
+    public List<DevisDto> getAllDevis() {
+        List<Devis> devisList = devisRepository.findAll();
+        return devisList.stream().map(devis -> {
+            DevisDto dto = new DevisDto();
+            dto.setId(devis.getId());
+            dto.setDateCreation(devis.getDateCreation());
+            dto.setStatut(devis.getStatut());
+            // Check if planning exists
+            Planning planning = planningRepository.findByDevisId(devis.getId());
+            dto.setPlanningId(planning != null ? planning.getId() : null);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 
 //    public List<Devis> obtenirTousLesDevis() {
 //        return devisRepository.findAll();

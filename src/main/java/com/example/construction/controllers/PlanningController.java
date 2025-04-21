@@ -1,7 +1,10 @@
 package com.example.construction.controllers;
 
+import com.example.construction.models.Devis;
 import com.example.construction.models.Planning;
+import com.example.construction.models.Projet;
 import com.example.construction.models.Tache;
+import com.example.construction.repositories.DevisRepository;
 import com.example.construction.services.PlanningService;
 import com.example.construction.services.TacheService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +35,12 @@ public class PlanningController {
 
     @GetMapping("/devis/{devisId}")
     public ResponseEntity<Planning> getPlanningByDevisId(@PathVariable Long devisId) {
-        Planning planning = planningService.getPlanningByDevisId(devisId);
+        Planning planning = planningService.getPlanning(devisId);
         if (planning == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(planning);
     }
+
+
 }

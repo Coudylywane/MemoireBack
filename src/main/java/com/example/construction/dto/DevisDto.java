@@ -15,4 +15,5 @@ public class DevisDto implements Serializable {
     private BigDecimal montant;
     private LocalDate dateCreation;
     private DevisStatus statut ;
+    private Long planningId;
 }

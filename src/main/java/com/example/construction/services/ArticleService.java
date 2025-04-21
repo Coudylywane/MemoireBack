@@ -28,9 +28,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository ;
-    private final MapStructMapper mapStructMapper;
     private final ZoneStockRepository zoneStockRepository;
     private final UniteMesureRepository uniteMesureRepository;
+    private final MapStructMapper mapStructMapper;
+
     //private final ValidationUtils validationUtils;
     private final TypeArticleRepository typeArticleRepository;
     private final ValidationUtils validationUtils ;
