@@ -121,6 +121,7 @@
 package com.example.construction.services;
 
 import com.example.construction.config1.UserPrincipal;
+import com.example.construction.models.Article;
 import com.example.construction.models.Role;
 import com.example.construction.models.Utilisateur;
 import com.example.construction.repositories.RoleRepository;
@@ -238,5 +239,8 @@ public class UtilisateurService {
         }
     }
 
+    public Page<Utilisateur> getUtilisateurPage(Pageable pageable){
+        return utilisateurRepository.findByAllPeagable(pageable);
+    }
 }
 

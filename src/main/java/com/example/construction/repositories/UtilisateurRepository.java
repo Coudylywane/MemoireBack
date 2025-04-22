@@ -20,7 +20,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     @Query("SELECT u FROM Utilisateur u WHERE u.archive=false AND u.status=true AND u.role.libelle=:role")
     Optional<List<Utilisateur>> findByRole(@Param("role") String role);
 
-    @Query("SELECT u FROM Utilisateur u WHERE u.archive=false AND u.status=true")
+    @Query("SELECT u FROM Utilisateur u WHERE u.archive=false")
     Page<Utilisateur> findByAllPeagable(Pageable pageable);
 //
 //    @Query("SELECT u FROM Utilisateur u WHERE u.archive=false AND u.status=true AND u.structure.id=:structure ")
