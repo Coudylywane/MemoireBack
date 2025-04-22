@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .antMatchers("/api/login").permitAll()
                .antMatchers("/api/connected-user").permitAll()
+               .antMatchers("/api/commande").permitAll() // <-- AJOUT ICI
                 .anyRequest()
                 .authenticated()
                 .and()

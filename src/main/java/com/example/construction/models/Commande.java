@@ -25,9 +25,9 @@ public class Commande {
     private Double prixTotal;
 
     // Ajoutez les annotations JPA appropriées pour mapper cette liste
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetailCommande> detailsCommande;
-
+    
 
 
 

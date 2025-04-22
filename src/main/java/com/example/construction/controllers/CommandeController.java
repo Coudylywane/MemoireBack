@@ -2,8 +2,11 @@ package com.example.construction.controllers;
 
 import com.example.construction.models.Commande;
 import com.example.construction.models.DetailCommande;
+import com.example.construction.repositories.CommandeRepository;
 import com.example.construction.services.CommandeService;
 import com.example.construction.services.ParametrageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +24,23 @@ public class CommandeController {
     private final CommandeService commandeService;
 
     @PostMapping("/commande")
-    public ResponseEntity<?> ajouterCommande(@RequestBody List<DetailCommande> detailsCommande) {
+    public ResponseEntity<?> ajouterCommande(@RequestBody Commande commande) {
         try {
-            Commande nouvelleCommande = commandeService.addCommande(detailsCommande);
+            System.out.println("Commande reçue : " + new ObjectMapper().writeValueAsString(commande));
+            Commande nouvelleCommande = commandeService.addCommande(commande);
             return ResponseEntity.ok(nouvelleCommande);
         } catch (Exception e) {
-            // En cas d'erreur, renvoyer un code d'état 500 avec le message de l'exception
+            e.printStackTrace(); // pour afficher l'erreur dans les logs
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    
+    
+
+  
+   
+    
+    
+    
 
 }
