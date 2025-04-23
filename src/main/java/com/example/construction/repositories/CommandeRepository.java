@@ -1,6 +1,10 @@
 package com.example.construction.repositories;
 
 import com.example.construction.models.Commande;
+import com.example.construction.models.Fournisseur;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +21,8 @@ public interface CommandeRepository extends JpaRepository<Commande, Long> {
         String uniqueId = UUID.randomUUID().toString();
         String numero = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "-" + uniqueId.substring(0, 6);
         return numero;
+
     }
+
+
 }

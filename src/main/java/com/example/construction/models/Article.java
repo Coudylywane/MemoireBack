@@ -1,6 +1,10 @@
 package com.example.construction.models;
 
 import javax.persistence.*;
+
+import com.example.construction.models.enumeration.StatusArticle;
+import com.example.construction.models.enumeration.StatusCommande;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +40,8 @@ public class Article {
 
     private Integer prixReviensUnitaire;
 
-    private String status = "DISPONIBLE";
+    @Enumerated(EnumType.STRING)
+    private StatusArticle status = StatusArticle.DISPONIBLE;
 
     @Column(name = "prixReel", nullable = false)
     private Double prixReel; // Le prix réel de l'article
@@ -58,9 +63,9 @@ public class Article {
     private Double totalPrice;
 
     // Méthode pour supprimer l'article sans le supprimer de la base de données
-    public void softDelete() {
-        this.status = "Archive";
-    }
+    //public void softDelete() {
+        //this.status = "Archive";
+    //}
 
     @ManyToOne
     @JoinColumn(name = "zoneStock", referencedColumnName = "id")
