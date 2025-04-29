@@ -39,7 +39,7 @@ public class 	ConstructionApplication extends SpringBootServletInitializer imple
 
 	@Override
 	public void run(String... args) throws Exception {
-		//utilisateurFixture.addDefaultRoles();
+		utilisateurFixture.addDefaultRoles();
 		//utilisateurFixture.addDefaultSuperAdmin();
 	}
 

@@ -180,75 +180,75 @@ public class ProjetController {
 //        return ResponseEntity.ok(tachesSauvegardees);
 //    }
 
-    @PutMapping("/taches/{tacheId}/pourcentage")
-    public ResponseEntity<Tache> mettreAJourPourcentage(
-            @PathVariable Long tacheId,
-            @RequestParam int pourcentage) {
-        Tache tache = tacheRepository.findById(tacheId)
-                .orElseThrow(() -> new RuntimeException("Tâche non trouvée"));
-
-        // Valider le pourcentage (doit être entre 0 et 100)
-        if (pourcentage < 0 || pourcentage > 100) {
-            throw new RuntimeException("Le pourcentage doit être compris entre 0 et 100.");
-        }
-
-        tache.setPourcentageExecution(pourcentage);
-
-        // Mettre à jour le statut en fonction du pourcentage
-        if (pourcentage == 100) {
-            tache.setStatut("Terminée");
-        } else if (pourcentage > 0) {
-            tache.setStatut("En cours");
-        } else {
-            tache.setStatut("En attente");
-        }
-
-        Tache tacheMiseAJour = tacheRepository.save(tache);
-        return ResponseEntity.ok(tacheMiseAJour);
-    }
-
-    @PutMapping("/taches/{tacheId}/statut")
-    public ResponseEntity<Tache> mettreAJourStatut(
-            @PathVariable Long tacheId,
-            @RequestParam String statut) {
-        Tache tache = tacheRepository.findById(tacheId)
-                .orElseThrow(() -> new RuntimeException("Tâche non trouvée"));
-
-        // Valider le statut
-        if (!statut.equals("En attente") && !statut.equals("En cours") && !statut.equals("Terminée")) {
-            throw new RuntimeException("Statut invalide. Les valeurs autorisées sont : En attente, En cours, Terminée.");
-        }
-
-        tache.setStatut(statut);
-
-        // Mettre à jour le pourcentage d'exécution en fonction du statut
-        if (statut.equals("Terminée")) {
-            tache.setPourcentageExecution(100);
-        } else if (statut.equals("En cours")) {
-            tache.setPourcentageExecution(50); // Ou une autre valeur par défaut
-        } else {
-            tache.setPourcentageExecution(0);
-        }
-
-        Tache tacheMiseAJour = tacheRepository.save(tache);
-        return ResponseEntity.ok(tacheMiseAJour);
-    }
-
-    @PostMapping("/project/{id}")
-    public ResponseEntity<Projet> addValidationToProjet(
-            @PathVariable Long id,
-            @RequestParam String status) {
-        return ResponseEntity.ok(projetService.addValidationToProjet(id, status));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<ProjetDto>> getAllProjects() {
-        List<Projet> projets = projetService.getAllProjects();
-        List<ProjetDto> dtoList = projets.stream()
-                .map(projet -> modelMapper.map(projet, ProjetDto.class))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtoList);
-    }
+//    @PutMapping("/taches/{tacheId}/pourcentage")
+//    public ResponseEntity<Tache> mettreAJourPourcentage(
+//            @PathVariable Long tacheId,
+//            @RequestParam int pourcentage) {
+//        Tache tache = tacheRepository.findById(tacheId)
+//                .orElseThrow(() -> new RuntimeException("Tâche non trouvée"));
+//
+//        // Valider le pourcentage (doit être entre 0 et 100)
+//        if (pourcentage < 0 || pourcentage > 100) {
+//            throw new RuntimeException("Le pourcentage doit être compris entre 0 et 100.");
+//        }
+//
+//        tache.setPourcentageExecution(pourcentage);
+//
+//        // Mettre à jour le statut en fonction du pourcentage
+//        if (pourcentage == 100) {
+//            tache.setStatut("Terminée");
+//        } else if (pourcentage > 0) {
+//            tache.setStatut("En cours");
+//        } else {
+//            tache.setStatut("En attente");
+//        }
+//
+//        Tache tacheMiseAJour = tacheRepository.save(tache);
+//        return ResponseEntity.ok(tacheMiseAJour);
+//    }
+//
+//    @PutMapping("/taches/{tacheId}/statut")
+//    public ResponseEntity<Tache> mettreAJourStatut(
+//            @PathVariable Long tacheId,
+//            @RequestParam String statut) {
+//        Tache tache = tacheRepository.findById(tacheId)
+//                .orElseThrow(() -> new RuntimeException("Tâche non trouvée"));
+//
+//        // Valider le statut
+//        if (!statut.equals("En attente") && !statut.equals("En cours") && !statut.equals("Terminée")) {
+//            throw new RuntimeException("Statut invalide. Les valeurs autorisées sont : En attente, En cours, Terminée.");
+//        }
+//
+//        tache.setStatut(statut);
+//
+//        // Mettre à jour le pourcentage d'exécution en fonction du statut
+//        if (statut.equals("Terminée")) {
+//            tache.setPourcentageExecution(100);
+//        } else if (statut.equals("En cours")) {
+//            tache.setPourcentageExecution(50); // Ou une autre valeur par défaut
+//        } else {
+//            tache.setPourcentageExecution(0);
+//        }
+//
+//        Tache tacheMiseAJour = tacheRepository.save(tache);
+//        return ResponseEntity.ok(tacheMiseAJour);
+//    }
+//
+//    @PostMapping("/project/{id}")
+//    public ResponseEntity<Projet> addValidationToProjet(
+//            @PathVariable Long id,
+//            @RequestParam String status) {
+//        return ResponseEntity.ok(projetService.addValidationToProjet(id, status));
+//    }
+//
+//    @GetMapping("/all")
+//    public ResponseEntity<List<ProjetDto>> getAllProjects() {
+//        List<Projet> projets = projetService.getAllProjects();
+//        List<ProjetDto> dtoList = projets.stream()
+//                .map(projet -> modelMapper.map(projet, ProjetDto.class))
+//                .collect(Collectors.toList());
+//        return ResponseEntity.ok(dtoList);
+//    }
 
 
 }
