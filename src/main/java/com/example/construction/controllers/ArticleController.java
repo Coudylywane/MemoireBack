@@ -118,20 +118,6 @@ public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOExcep
     }
 
 
-
-
-    @DeleteMapping("/article/{id}")
-    public ResponseEntity<?> softDeleteArticle(@PathVariable Long id) {
-        try {
-            articleService.softDeleteArticle(id);
-            return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Article not found with id: " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
     @GetMapping("/articles")
     public ResponseEntity<?> getArticlePage(
             @RequestParam(defaultValue = "0") int page,

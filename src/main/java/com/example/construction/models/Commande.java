@@ -2,6 +2,7 @@ package com.example.construction.models;
 
 import javax.persistence.*;
 
+import com.example.construction.models.enumeration.StatusCommande;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,8 @@ public class Commande {
     private String numero;
     private String date;
     private Double prixTotal;
+    @Enumerated(EnumType.STRING)
+    private StatusCommande status = StatusCommande.EN_COURS;
 
     // Ajoutez les annotations JPA appropriées pour mapper cette liste
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -168,8 +168,6 @@ public class ArticleService {
         }
     }
     
-    
-
 
     public Article createArticle(ArticleRequestDto articleRequestDto) {
         if (articleRequestDto == null || articleRequestDto.getCode() == null || articleRequestDto.getCode().isEmpty()) {
@@ -181,18 +179,9 @@ public class ArticleService {
         return articleRepository.save(article);
     }
 
-    //LISTE
+    /**** LISTE ****/
     public List<Article> getAllArticle() {
         return articleRepository.findAll();
-    }
-
-    ///Delete
-    public void softDeleteArticle(Long articleId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new EntityNotFoundException("Article not found with id: " + articleId));
-
-        article.softDelete(); // Utilisez la méthode de suppression logique définie dans l'entité
-        articleRepository.save(article);
     }
 
 
