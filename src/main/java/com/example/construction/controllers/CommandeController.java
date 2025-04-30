@@ -101,6 +101,12 @@ public class CommandeController {
         }
     }
 
+    /** RECUPERER LES COMMANDES DU DASH **/
+    @GetMapping("/commande-list")
+    public List<Commande> getCommandes() {
+        return commandeService.getAllCommandes(); 
+    }
+
     /*** GENERE BON COMMANDE ****/
     //@PostMapping("/{id}/generer-bon")
     //public ResponseEntity<String> generateBonDeCommande(@PathVariable Long id) {
