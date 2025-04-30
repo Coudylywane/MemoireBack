@@ -1,6 +1,7 @@
 package com.example.construction.controllers;
 
 import com.example.construction.dto.DevisDto;
+import com.example.construction.models.Article;
 import com.example.construction.models.Devis;
 import com.example.construction.models.LigneDevis;
 import com.example.construction.models.enumeration.DevisStatus;
@@ -10,13 +11,16 @@ import com.example.construction.services.PdfService;
 import com.example.construction.services.ProjetService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -91,6 +95,16 @@ public class DevisController {
     public ResponseEntity<Devis> validerDevis2(@PathVariable Long id) {
         Devis devis = devisService.validerDevis(id);
         return ResponseEntity.ok(devis);
+    }
+
+    @GetMapping("/devis/{devisId}/articles")
+    public List<Article> getArticlesByDevisId(@PathVariable Long devisId) {
+        Devis devis = devisRepository.findById(devisId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Devis non trouvé : " + devisId));
+        return devis.getLignesDevis().stream()
+                .map(ligne -> ligne.getArticle())
+                .distinct()
+                .collect(Collectors.toList());
     }
 
 //    @PutMapping("/{devisId}/prix-reels")

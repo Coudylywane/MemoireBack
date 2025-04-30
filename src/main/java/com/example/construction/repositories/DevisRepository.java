@@ -16,8 +16,13 @@ public interface DevisRepository extends JpaRepository<Devis, Long> {
     boolean existsByProjetAndStatut(Projet projet, DevisStatus statut);
     List<Devis> findByProjetId(Long projetId);
 
-    @Query("SELECT t FROM Tache t LEFT JOIN t.planning p ON t.planning.id = p.id WHERE (p.devis.id = :devisId) AND t.status = :status")
-    List<Tache> findTachesByDevisId(@Param("devisId") Long devisId , TaskStatus status);
+//    @Query("SELECT t FROM Tache t LEFT JOIN t.planning p WHERE p.devis.id = :devisId AND t.status = :status")
+//    List<Tache> findTachesByDevisId(@Param("devisId") Long devisId , TaskStatus status);
+//
+        @Query("SELECT t FROM Tache t LEFT JOIN t.planning p WHERE p.devis.id = :devisId AND t.status = :status")
+        List<Tache> findTachesByDevisId(@Param("devisId") Long devisId, @Param("status") TaskStatus status);
+
+
 
 //    SELECT t.*
 //    FROM tache t

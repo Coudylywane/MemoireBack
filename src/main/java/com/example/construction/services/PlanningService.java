@@ -7,10 +7,12 @@ import com.example.construction.models.Tache;
 import com.example.construction.models.enumeration.TaskStatus;
 import com.example.construction.repositories.DevisRepository;
 import com.example.construction.repositories.PlanningRepository;
+import com.example.construction.request.TacheDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlanningService {
@@ -48,8 +50,27 @@ public class PlanningService {
         return planningRepository.findByDevisId(devisId);
     }
 
-    public List<Tache> getTachesByDevisId(Long devisId , TaskStatus status) {
-        return devisRepository.findTachesByDevisId(devisId , status);
+//    public List<Tache> getTachesByDevisId(Long devisId , TaskStatus status) {
+//        return devisRepository.findTachesByDevisId(devisId , status);
+//    }
+
+    public List<TacheDto> getTachesByDevisId(Long devisId, TaskStatus status) {
+        System.out.println("Appel de findTachesByDevisId avec devisId=" + devisId + ", status=" + status);
+        List<Tache> taches = devisRepository.findTachesByDevisId(devisId, status);
+        return taches.stream()
+                .map(tache -> {
+                    TacheDto dto = new TacheDto();
+                    dto.setId(tache.getId());
+                    dto.setNom(tache.getNom());
+                    dto.setDescription(tache.getDescription());
+                    dto.setDureeEstimee(tache.getDureeEstimee());
+                    dto.setDateDebut(tache.getDateDebut());
+                    dto.setDateFin(tache.getDateFin());
+                    dto.setStatus(tache.getStatus());
+                    dto.setPourcentageExecution(tache.getPourcentageExecution());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
 

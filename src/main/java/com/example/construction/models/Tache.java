@@ -10,7 +10,9 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,4 +38,6 @@ public class Tache {
     private Planning planning;
     @OneToMany(mappedBy = "tache", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjetTache> projetTaches = new HashSet<>();
+    @OneToMany(mappedBy = "tache", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TacheArticle> articles = new ArrayList<>();
 }

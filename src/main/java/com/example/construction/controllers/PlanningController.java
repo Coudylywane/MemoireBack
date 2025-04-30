@@ -3,6 +3,7 @@ package com.example.construction.controllers;
 import com.example.construction.models.Planning;
 import com.example.construction.models.Tache;
 import com.example.construction.models.enumeration.TaskStatus;
+import com.example.construction.request.TacheDto;
 import com.example.construction.services.PdfService;
 import com.example.construction.services.PlanningService;
 import com.example.construction.services.TacheService;
@@ -41,13 +42,19 @@ public class PlanningController {
     }
 
     @GetMapping("/devis/{devisId}/{status}")
-    public List<Tache> getTachesByDevisId(@PathVariable Long devisId , TaskStatus status) {
-        return planningService.getTachesByDevisId(devisId, status);
+    public List<TacheDto> getTachesByDevisId(@PathVariable Long devisId, @PathVariable String status) {
+        TaskStatus taskStatus;
+        try {
+            taskStatus = TaskStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Statut invalide : " + status);
+        }
+        return planningService.getTachesByDevisId(devisId, taskStatus);
     }
 
     @GetMapping("/devis/{devisId}/pdf")
     public ResponseEntity<InputStreamResource> downloadTachesPdf(@PathVariable Long devisId,TaskStatus status) {
-        List<Tache> taches = planningService.getTachesByDevisId(devisId, status);
+        List<TacheDto> taches = planningService.getTachesByDevisId(devisId, status);
 
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();

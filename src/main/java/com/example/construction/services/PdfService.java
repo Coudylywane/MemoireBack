@@ -3,6 +3,7 @@ package com.example.construction.services;
 import com.example.construction.models.Devis;
 import com.example.construction.models.LigneDevis;
 import com.example.construction.models.Tache;
+import com.example.construction.request.TacheDto;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -119,7 +120,7 @@ public class PdfService {
         document.save(outputStream);
         document.close();
     }
-    public void generatePlanningPdf(List<Tache> taches, OutputStream outputStream) throws IOException {
+    public void generatePlanningPdf(List<TacheDto> taches, OutputStream outputStream) throws IOException {
         PDDocument document = new PDDocument();
         PDPage page = new PDPage();
         document.addPage(page);
@@ -145,12 +146,12 @@ public class PdfService {
 
             LocalDate startDate = taches.stream()
                     .filter(t -> t.getDateDebut() != null)
-                    .map(Tache::getDateDebut)
+                    .map(TacheDto::getDateDebut)
                     .min(LocalDate::compareTo)
                     .orElse(LocalDate.now());
             LocalDate endDate = taches.stream()
                     .filter(t -> t.getDateFin() != null)
-                    .map(Tache::getDateFin)
+                    .map(TacheDto::getDateFin)
                     .max(LocalDate::compareTo)
                     .orElse(startDate.plusDays(30));
 
@@ -191,7 +192,7 @@ public class PdfService {
 
             float y = startY - (2 * rowHeight) - 10;
             int taskIndex = 0;
-            for (Tache tache : taches) {
+            for (TacheDto tache : taches) {
                 if (tache.getDateDebut() == null || tache.getDateFin() == null) {
                     continue;
                 }

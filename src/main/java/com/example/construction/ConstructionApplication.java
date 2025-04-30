@@ -18,20 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RequiredArgsConstructor
 @SpringBootApplication
 public class 	ConstructionApplication extends SpringBootServletInitializer implements CommandLineRunner {
-//	@Autowired
-//	private UtilisateurFixture utilisateurFixture;
-//	@Override
-//	public void run(String... args) throws Exception {
-//		utilisateurFixture.addDefaultRoles();
-//		utilisateurFixture.addDefaultSuperAdmin();
-//	  /*moisFixture.addDefaultMois();
-//	  regionFixture.addDefaultRegion();
-//	  typeStructureFixtures.createStructureTypes();
-//	  etatFixture.addServiceEtat();
-//		utilisateurFixture.addDefaultJuge();
-//		utilisateurFixture.addDefaultOfficier();
-//		typeDeclarationFixture.createTypeDeclarationFixture();*/
-//	}
 
 	private final UtilisateurFixture utilisateurFixture;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -39,10 +25,9 @@ public class 	ConstructionApplication extends SpringBootServletInitializer imple
 
 	@Override
 	public void run(String... args) throws Exception {
-		utilisateurFixture.addDefaultRoles();
-		//utilisateurFixture.addDefaultSuperAdmin();
+		// utilisateurFixture.addDefaultRoles();
+		// utilisateurFixture.addDefaultSuperAdmin();
 	}
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(ConstructionApplication.class, args);
