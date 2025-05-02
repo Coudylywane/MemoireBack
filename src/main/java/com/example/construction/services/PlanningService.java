@@ -7,6 +7,7 @@ import com.example.construction.models.Tache;
 import com.example.construction.models.enumeration.TaskStatus;
 import com.example.construction.repositories.DevisRepository;
 import com.example.construction.repositories.PlanningRepository;
+import com.example.construction.request.TacheArticleDto;
 import com.example.construction.request.TacheDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,6 @@ public class PlanningService {
 //    }
 
     public List<TacheDto> getTachesByDevisId(Long devisId, TaskStatus status) {
-        System.out.println("Appel de findTachesByDevisId avec devisId=" + devisId + ", status=" + status);
         List<Tache> taches = devisRepository.findTachesByDevisId(devisId, status);
         return taches.stream()
                 .map(tache -> {
@@ -69,10 +69,19 @@ public class PlanningService {
                     dto.setDateFin(tache.getDateFin());
                     dto.setStatus(tache.getStatus());
                     dto.setPourcentageExecution(tache.getPourcentageExecution());
+                    // Mapper les TacheArticle vers TacheArticleDto
+                    List<TacheArticleDto> articleDtos = tache.getArticles().stream()
+                            .map(ta -> {
+                                TacheArticleDto taDto = new TacheArticleDto();
+                                taDto.setArticleId(ta.getArticle().getId());
+                                taDto.setQuantiteUtilisee(ta.getQuantiteUtilisee());
+                                return taDto;
+                            })
+                            .collect(Collectors.toList());
+                    dto.setArticles(articleDtos);
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
-
 
 }

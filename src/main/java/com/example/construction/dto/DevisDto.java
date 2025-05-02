@@ -16,4 +16,5 @@ public class DevisDto implements Serializable {
     private LocalDate dateCreation;
     private DevisStatus statut ;
     private Long planningId;
+    private DtoProjet projet;
 }

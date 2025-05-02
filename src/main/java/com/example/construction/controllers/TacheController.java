@@ -10,6 +10,7 @@ import com.example.construction.repositories.TacheRepository;
 import com.example.construction.request.TacheArticleDto;
 import com.example.construction.request.TacheDto;
 import com.example.construction.services.PdfService;
+import com.example.construction.services.TacheArticleService;
 import com.example.construction.services.TacheService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,6 +38,7 @@ public class TacheController {
     private final TacheRepository tacheRepository;
     private final TacheArticleRepository tacheArticleRepository;
     private final ArticleRepository articleRepository;
+    private final TacheArticleService tacheArticleService;
 
     @PostMapping("/add")
     public ResponseEntity<Tache> ajouterTache(@RequestBody Tache tache) {
@@ -111,23 +115,48 @@ public class TacheController {
         tache.setStatus(tacheDTO.getStatus());
         tache.setPourcentageExecution(tacheDTO.getPourcentageExecution());
 
-        // Mettre à jour les articles associés
-        tache.getArticles().clear(); // Supprime les anciens articles (cascade et orphanRemoval gèrent la suppression)
+        // Gérer les TacheArticle
+        Set<Long> newArticleIds = tacheDTO.getArticles().stream()
+                .map(TacheArticleDto::getArticleId)
+                .collect(Collectors.toSet());
 
-        // Ajouter les nouvelles associations
-        List<TacheArticle> newArticles = tacheDTO.getArticles().stream().map(dto -> {
-            // Vérifier si l'article existe
+        // Identifier les TacheArticle existants à supprimer
+        Set<Long> articlesToRemove = tache.getArticles().stream()
+                .map(ta -> ta.getArticle().getId())
+                .filter(articleId -> !newArticleIds.contains(articleId))
+                .collect(Collectors.toSet());
+
+        // Supprimer les TacheArticle qui ne sont plus dans le DTO
+        tache.getArticles().removeIf(ta -> articlesToRemove.contains(ta.getArticle().getId()));
+
+        // Créer ou mettre à jour les TacheArticle
+        Set<Long> affectedArticleIds = new HashSet<>(articlesToRemove);
+        List<TacheArticle> updatedArticles = tacheDTO.getArticles().stream().map(dto -> {
             Article article = articleRepository.findById(dto.getArticleId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Article non trouvé : " + dto.getArticleId()));
+            affectedArticleIds.add(article.getId());
 
-            TacheArticle tacheArticle = new TacheArticle();
-            tacheArticle.setTache(tache);
-            tacheArticle.setArticle(article);
-            tacheArticle.setQuantiteUtilisee(dto.getQuantiteUtilisee());
-            return tacheArticle;
+            // Vérifier si un TacheArticle existe déjà pour cet article
+            TacheArticle existingTacheArticle = tache.getArticles().stream()
+                    .filter(ta -> ta.getArticle().getId().equals(dto.getArticleId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingTacheArticle != null) {
+                // Mettre à jour la quantité utilisée
+                existingTacheArticle.setQuantiteUtilisee(dto.getQuantiteUtilisee());
+                return existingTacheArticle;
+            } else {
+                // Créer un nouveau TacheArticle
+                TacheArticle tacheArticle = new TacheArticle();
+                tacheArticle.setTache(tache);
+                tacheArticle.setArticle(article);
+                tacheArticle.setQuantiteUtilisee(dto.getQuantiteUtilisee());
+                tache.getArticles().add(tacheArticle);
+                return tacheArticle;
+            }
         }).collect(Collectors.toList());
 
-        tache.getArticles().addAll(newArticles);
         System.out.println("Articles avant sauvegarde: " + tache.getArticles());
 
         // Sauvegarder la tâche
@@ -135,7 +164,10 @@ public class TacheController {
         System.out.println("Tâche sauvegardée: " + updatedTache);
         System.out.println("Articles après sauvegarde: " + updatedTache.getArticles());
 
-        // Créer le DTO de réponse
+        // Mettre à jour la quantité des articles affectés
+        affectedArticleIds.forEach(tacheArticleService::updateArticleQuantity);
+
+        // Créer le DTO de retour
         TacheDto result = new TacheDto();
         result.setId(updatedTache.getId());
         result.setNom(updatedTache.getNom());
