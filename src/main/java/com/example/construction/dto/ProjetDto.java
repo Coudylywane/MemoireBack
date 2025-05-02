@@ -1,6 +1,7 @@
 package com.example.construction.dto;
 
 import com.example.construction.models.Devis;
+import com.example.construction.models.Utilisateur;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,4 +27,5 @@ public class ProjetDto implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime createdAt;
     private List<DevisDto> devis;
+    private Long clientId;
 }

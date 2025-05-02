@@ -75,6 +75,15 @@ public class UtilisateurController {
         }
     }
 
+    @GetMapping("/user/role")
+    public ResponseEntity<?> getUserByRole()
+    {
+        List<Utilisateur> user = utilisateurService.getUsersByRole("CLIENT");
+        return ResponseEntity.ok(user);
+    }
+
+
+
     @DeleteMapping("/user/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {

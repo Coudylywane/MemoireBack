@@ -32,6 +32,7 @@ public class AuthenticationService {
                 .login(registerRequest.getLogin())
                 .telephoneString(registerRequest.getTelephoneString())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .status(true)
                 .role(registerRequest.getRole())
                 .build();
         repository.save(user);

@@ -4,16 +4,15 @@ import com.example.construction.models.Devis;
 import com.example.construction.models.Planning;
 import com.example.construction.models.Projet;
 import com.example.construction.models.Tache;
+import com.example.construction.models.enumeration.TaskStatus;
 import com.example.construction.repositories.DevisRepository;
 import com.example.construction.repositories.PlanningRepository;
-import com.example.construction.repositories.ProjetRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.construction.request.TacheDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlanningService {
@@ -23,8 +22,6 @@ public class PlanningService {
     @Autowired
     private DevisRepository devisRepository;
 
-    @Autowired
-    private ProjetRepository projetRepository;
 
     public Planning createPlanning(Long devisId, List<Tache> taches) {
         Devis devis = devisRepository.findById(devisId)
@@ -43,6 +40,7 @@ public class PlanningService {
                 .filter(tache -> tache.getDateDebut() != null && tache.getDateFin() != null)
                 .forEach(tache -> {
                     tache.setPlanning(planning);
+                    tache.setStatus(TaskStatus.BACKLOG);
                     planning.getTaches().add(tache);
                 });
 
@@ -53,30 +51,28 @@ public class PlanningService {
         return planningRepository.findByDevisId(devisId);
     }
 
-    public Planning getPlanning(Long devisId) {
-        Logger logger = LoggerFactory.getLogger(getClass());
+//    public List<Tache> getTachesByDevisId(Long devisId , TaskStatus status) {
+//        return devisRepository.findTachesByDevisId(devisId , status);
+//    }
 
-        if (devisId == null) {
-            logger.error("devisId cannot be null");
-            throw new IllegalArgumentException("devisId cannot be null");
-        }
-
-        // Vérifier si le devis existe
-        Devis devis = devisRepository.findById(devisId)
-                .orElseThrow(() -> {
-                    logger.error("Devis not found for id: {}", devisId);
-                    return new RuntimeException("Devis not found");
-                });
-
-        // Récupérer le planning
-        Optional<Planning> planningOpt = planningRepository.findByDevis(devisId);
-        if (planningOpt.isEmpty()) {
-            logger.warn("No planning found for devis id: {}", devisId);
-            return null;
-        }
-
-        Planning planning = planningOpt.get();
-        logger.info("Planning found with id: {} for devis id: {}", planning.getId(), devisId);
-        return planning;
+    public List<TacheDto> getTachesByDevisId(Long devisId, TaskStatus status) {
+        System.out.println("Appel de findTachesByDevisId avec devisId=" + devisId + ", status=" + status);
+        List<Tache> taches = devisRepository.findTachesByDevisId(devisId, status);
+        return taches.stream()
+                .map(tache -> {
+                    TacheDto dto = new TacheDto();
+                    dto.setId(tache.getId());
+                    dto.setNom(tache.getNom());
+                    dto.setDescription(tache.getDescription());
+                    dto.setDureeEstimee(tache.getDureeEstimee());
+                    dto.setDateDebut(tache.getDateDebut());
+                    dto.setDateFin(tache.getDateFin());
+                    dto.setStatus(tache.getStatus());
+                    dto.setPourcentageExecution(tache.getPourcentageExecution());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
+
+
 }

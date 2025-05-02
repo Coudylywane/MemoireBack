@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,12 +60,8 @@ public class Projet {
     @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjetTache> projetTaches = new HashSet<>();
 
-//    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Validation> validations;
-//
-//    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Devis> devis = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "projet", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Tache> taches = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false,referencedColumnName = "id")
+    private Utilisateur client;
+
 }

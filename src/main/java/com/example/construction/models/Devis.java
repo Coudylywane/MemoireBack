@@ -1,6 +1,7 @@
 package com.example.construction.models;
 
 import com.example.construction.models.enumeration.DevisStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,8 @@ public class Devis {
     private List<LigneDevis> lignesDevis = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "projet_id", nullable = false) // Un devis doit être lié à un projet
+    @JoinColumn(name = "projet_id", nullable = false)
+    @JsonIgnore// Un devis doit être lié à un projet
     private Projet projet;
 
     @OneToMany(mappedBy = "devis", cascade = CascadeType.ALL)
