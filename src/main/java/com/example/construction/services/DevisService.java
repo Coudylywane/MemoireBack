@@ -71,6 +71,7 @@ public class DevisService {
         }).collect(Collectors.toList());
     }
 
+    
 
 //    public List<Devis> obtenirTousLesDevis() {
 //        return devisRepository.findAll();

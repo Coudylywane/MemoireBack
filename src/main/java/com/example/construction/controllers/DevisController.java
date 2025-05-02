@@ -44,7 +44,7 @@ public class DevisController {
     public List<DevisDto> obtenirTousLesDevis() {
         return devisService.getAllDevis();
     }
-
+    
     @GetMapping("/projet/{projetId}")
     public ResponseEntity<List<Devis>> obtenirDevisParProjetId(@PathVariable Long projetId) {
         List<Devis> devisList = devisService.obtenirDevisParProjetId(projetId);
