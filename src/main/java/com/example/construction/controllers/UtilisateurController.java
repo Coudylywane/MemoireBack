@@ -65,4 +65,13 @@ public class UtilisateurController {
             throw e;
         }
     }
+
+    @GetMapping("/user/role")
+    public ResponseEntity<?> getUserByRole()
+    {
+        List<Utilisateur> user = utilisateurService.getUsersByRole("CLIENT");
+        return ResponseEntity.ok(user);
+    }
+
+
 }

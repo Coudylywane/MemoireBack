@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface TacheRepository extends JpaRepository<Tache, Long> {
     List<Tache> findByPlanningId(Long planningId);
-    List<Tache>     findByPlanningIdAndStatus(Long planningId, TaskStatus status);
+    List<Tache> findByPlanningIdAndStatus(Long planningId, TaskStatus status);
+
 }

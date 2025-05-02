@@ -1,4 +1,5 @@
 package com.example.construction.controllers;
+import com.example.construction.exceptions.EntityNotFoundException;
 import com.example.construction.models.Tache;
 import com.example.construction.repositories.ProjetRepository;
 import com.example.construction.repositories.TacheRepository;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,6 +44,7 @@ public class ProjetController {
     private final TacheRepository tacheRepository ;
     private final ProjetRepository ProjetRepository;
     private final PlanningService planningService;
+    private final ProjetRepository projetRepository;
 
 
     @GetMapping()
@@ -86,24 +89,20 @@ public class ProjetController {
     @Operation(
             summary = "Create a new Projet",
             description = "Creates a new Projet based on the provided Projet request data.",
-            tags = { "Projets" })
+            tags = {"Projets"}
+    )
     @ApiResponse(responseCode = "200", description = "Projet created successfully")
     @ApiResponse(responseCode = "400", description = "Bad request due to validation errors")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public ResponseEntity<?> createProjet(@RequestBody ProjetRequestDto ProjetRequestDto) {
-      try {
-        if (ProjetRequestDto == null) {
-          throw new IllegalArgumentException("Le projet ne peut pas être nul.");
+    public ResponseEntity<?> createProjet(@Valid @RequestBody ProjetRequestDto projetRequestDto) {
+        try {
+            Projet projet = projetService.createProject(projetRequestDto);
+            return ResponseEntity.status(HttpStatus.OK).body(projet);
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Erreur de validation", "message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Erreur inattendue", "message", e.getMessage()));
         }
-        Projet Projet = projetService.createProject(ProjetRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(Projet);
-      } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(Map.of("error", "Erreur de validation", "message", e.getMessage()));
-      } catch (DataIntegrityViolationException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "Conflit de données", "message", e.getMessage()));
-      } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Erreur inattendue", "message", e.getMessage()));
-      }
     }
 
     @GetMapping("/{id}")
@@ -131,6 +130,12 @@ public class ProjetController {
         }
     }
 
+    // Récupérer tous les projets d'un client
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<List<Projet>> getProjetsByClientId(@PathVariable Long clientId) {
+        List<Projet> projets = projetRepository.findByClientId(clientId);
+        return ResponseEntity.ok(projets);
+    }
 
 
     @PostMapping("/add-sites")
@@ -234,12 +239,12 @@ public class ProjetController {
 //        return ResponseEntity.ok(tacheMiseAJour);
 //    }
 //
-//    @PostMapping("/project/{id}")
-//    public ResponseEntity<Projet> addValidationToProjet(
-//            @PathVariable Long id,
-//            @RequestParam String status) {
-//        return ResponseEntity.ok(projetService.addValidationToProjet(id, status));
-//    }
+    @PostMapping("/project/{id}")
+    public ResponseEntity<Projet> addValidationToProjet(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        return ResponseEntity.ok(projetService.addValidationToProjet(id, status));
+    }
 //
 //    @GetMapping("/all")
 //    public ResponseEntity<List<ProjetDto>> getAllProjects() {

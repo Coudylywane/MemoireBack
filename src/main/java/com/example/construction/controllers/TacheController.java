@@ -4,6 +4,7 @@ import com.example.construction.models.Article;
 import com.example.construction.models.Tache;
 import com.example.construction.models.TacheArticle;
 import com.example.construction.models.enumeration.TaskStatus;
+import com.example.construction.repositories.ArticleRepository;
 import com.example.construction.repositories.TacheArticleRepository;
 import com.example.construction.repositories.TacheRepository;
 import com.example.construction.request.TacheArticleDto;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +34,7 @@ public class TacheController {
     private final PdfService pdfService;
     private final TacheRepository tacheRepository;
     private final TacheArticleRepository tacheArticleRepository;
+    private final ArticleRepository articleRepository;
 
     @PostMapping("/add")
     public ResponseEntity<Tache> ajouterTache(@RequestBody Tache tache) {
@@ -41,9 +44,9 @@ public class TacheController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Tache>> listerTaches() {
+    public ResponseEntity<List<TacheDto>> listerTaches() {
         log.info("Récupération de toutes les tâches");
-        List<Tache> taches = tacheService.listerTaches();
+        List<TacheDto> taches = tacheService.listerTaches();
         return new ResponseEntity<>(taches, HttpStatus.OK);
     }
 
@@ -89,14 +92,15 @@ public class TacheController {
     }
 
     @PutMapping("/update/{id}")
+    @Transactional
     public TacheDto updateTache(@PathVariable Long id, @RequestBody TacheDto tacheDTO) {
+        System.out.println("Reçu requête PUT pour tâche ID: " + id);
+        System.out.println("TacheDTO reçu: " + tacheDTO);
+        System.out.println("Articles dans DTO: " + tacheDTO.getArticles());
+
+        // Récupérer la tâche existante
         Tache tache = tacheRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tâche non trouvée : " + id));
-
-        // Vérifier que la tâche est en cours
-        if (tache.getStatus() != TaskStatus.IN_PROGRESS) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seules les tâches en cours peuvent être modifiées.");
-        }
 
         // Mettre à jour les champs de la tâche
         tache.setNom(tacheDTO.getNom());
@@ -108,22 +112,28 @@ public class TacheController {
         tache.setPourcentageExecution(tacheDTO.getPourcentageExecution());
 
         // Mettre à jour les articles associés
-        // Supprimer les anciennes associations
-        tache.getArticles().clear();
-        tacheArticleRepository.deleteAll(tache.getArticles());
+        tache.getArticles().clear(); // Supprime les anciens articles (cascade et orphanRemoval gèrent la suppression)
 
         // Ajouter les nouvelles associations
         List<TacheArticle> newArticles = tacheDTO.getArticles().stream().map(dto -> {
+            // Vérifier si l'article existe
+            Article article = articleRepository.findById(dto.getArticleId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Article non trouvé : " + dto.getArticleId()));
+
             TacheArticle tacheArticle = new TacheArticle();
             tacheArticle.setTache(tache);
-            tacheArticle.setArticle(new Article());
-            tacheArticle.getArticle().setId(dto.getArticleId());
+            tacheArticle.setArticle(article);
             tacheArticle.setQuantiteUtilisee(dto.getQuantiteUtilisee());
             return tacheArticle;
         }).collect(Collectors.toList());
 
         tache.getArticles().addAll(newArticles);
+        System.out.println("Articles avant sauvegarde: " + tache.getArticles());
+
+        // Sauvegarder la tâche
         Tache updatedTache = tacheRepository.save(tache);
+        System.out.println("Tâche sauvegardée: " + updatedTache);
+        System.out.println("Articles après sauvegarde: " + updatedTache.getArticles());
 
         // Créer le DTO de réponse
         TacheDto result = new TacheDto();
@@ -142,6 +152,7 @@ public class TacheController {
             return taDto;
         }).collect(Collectors.toList()));
 
+        System.out.println("TacheDto renvoyé: " + result);
         return result;
     }
 

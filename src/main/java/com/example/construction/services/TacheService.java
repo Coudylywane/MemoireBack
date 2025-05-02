@@ -3,10 +3,13 @@ package com.example.construction.services;
 import com.example.construction.models.Tache;
 import com.example.construction.models.enumeration.TaskStatus;
 import com.example.construction.repositories.TacheRepository;
+import com.example.construction.request.TacheArticleDto;
+import com.example.construction.request.TacheDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +21,22 @@ public class TacheService {
         return tacheRepository.save(tache);
     }
 
-    public List<Tache> listerTaches() {
-        return tacheRepository.findAll();
+    public List<TacheDto> listerTaches() {
+        List<Tache> taches = tacheRepository.findAll();
+        return taches.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private TacheDto convertToDto(Tache tache) {
+        TacheDto dto = new TacheDto();
+        dto.setId(tache.getId());
+        dto.setNom(tache.getNom());
+        dto.setDateDebut(tache.getDateDebut());
+        dto.setDateFin(tache.getDateFin());
+        dto.setPourcentageExecution(tache.getPourcentageExecution());
+        dto.setStatus(tache.getStatus());
+        return dto;
     }
 
     public List<Tache> listerTachesParPlanning(Long planningId) {

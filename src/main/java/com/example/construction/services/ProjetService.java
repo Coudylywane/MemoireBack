@@ -3,12 +3,11 @@ package com.example.construction.services;
 import com.example.construction.mapper.MapStructMapper;
 import com.example.construction.models.Projet;
 import com.example.construction.models.Tache;
+import com.example.construction.models.Utilisateur;
 import com.example.construction.models.Validation;
-import com.example.construction.repositories.ArticleRepository;
-import com.example.construction.repositories.ProjetRepository;
-import com.example.construction.repositories.DevisRepository;
-import com.example.construction.repositories.TacheRepository;
+import com.example.construction.repositories.*;
 import com.example.construction.response.ProjetResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import com.example.construction.request.ProjetRequestDto;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +24,7 @@ import java.util.Optional;
 public class ProjetService {
     private final ProjetRepository projetRepository;
     private final MapStructMapper mapStructMapper;
-    private final ArticleRepository articleRepository ;
-    private final DevisRepository quoteRepository ;
-    private final TacheRepository tacheRepository ;
+    private final UtilisateurRepository utilisateurRepository;
 
 
     public Page<Projet> getAllProject(Pageable pageable) {
@@ -36,16 +34,36 @@ public class ProjetService {
         return projetRepository.findAll();
     }
 
-
-
+//    public Page<Projet> getAllProjectByClient(Pageable pageable){
+//        return projetRepository.findByClientId(pageable);
+//    }
 
     public Projet createProject(ProjetRequestDto projetRequestDto) {
         if (projetRequestDto == null || projetRequestDto.getName() == null || projetRequestDto.getName().isEmpty()) {
             throw new IllegalArgumentException("Le nom du projet est obligatoire.");
         }
-        // Convertir DTO en entité
+        if (projetRequestDto.getClientId() == null) {
+            throw new IllegalArgumentException("L'identifiant du client est obligatoire.");
+        }
+        Utilisateur client = utilisateurRepository.findById(projetRequestDto.getClientId())
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID: " + projetRequestDto.getClientId()));
+
         Projet projet = mapStructMapper.ProjetDtoToProjet(projetRequestDto);
-        // Enregistrer en base de données
+        projet.setCreatedAt(LocalDateTime.now());
+        projet.setClient(client);
+        if (projet.getStatus() == null) {
+            projet.setStatus("EN_ATTENTE");
+        }
+        Projet savedProjet = projetRepository.save(projet);
+        return savedProjet;
+    }
+
+
+    public Projet createProjecte(ProjetRequestDto projetRequestDto) {
+        if (projetRequestDto == null || projetRequestDto.getName() == null || projetRequestDto.getName().isEmpty()) {
+            throw new IllegalArgumentException("Le nom du projet est obligatoire.");
+        }
+        Projet projet = mapStructMapper.ProjetDtoToProjet(projetRequestDto);
         return projetRepository.save(projet);
     }
 

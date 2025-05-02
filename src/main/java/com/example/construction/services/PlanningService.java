@@ -40,6 +40,7 @@ public class PlanningService {
                 .filter(tache -> tache.getDateDebut() != null && tache.getDateFin() != null)
                 .forEach(tache -> {
                     tache.setPlanning(planning);
+                    tache.setStatus(TaskStatus.BACKLOG);
                     planning.getTaches().add(tache);
                 });
 

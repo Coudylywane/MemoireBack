@@ -97,7 +97,7 @@ public class DevisController {
         return ResponseEntity.ok(devis);
     }
 
-    @GetMapping("/devis/{devisId}/articles")
+    @GetMapping("/{devisId}/articles")
     public List<Article> getArticlesByDevisId(@PathVariable Long devisId) {
         Devis devis = devisRepository.findById(devisId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Devis non trouvé : " + devisId));

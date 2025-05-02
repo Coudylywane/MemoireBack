@@ -1,5 +1,7 @@
 package com.example.construction.request;
 
+import com.example.construction.models.Utilisateur;
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +19,8 @@ public class ProjetRequestDto {
     private LocalDateTime endDate;
     private String status;
     private List<String> validationStatuses;
+    @NotNull()
+    private Long clientId;
     //private List<SiteRequestDto> sites;
 
 }
