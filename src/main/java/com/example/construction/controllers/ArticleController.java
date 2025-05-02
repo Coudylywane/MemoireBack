@@ -37,42 +37,6 @@ public class ArticleController {
     private final ArticleService articleService;
 
 
-
-//    @PostMapping("/article")
-//    public ResponseEntity<Article> addArticle(@RequestBody Article article) {
-//        try {
-//        Article addedArticle = articleService.addArticle(article);
-//        return ResponseEntity.ok(addedArticle);
-//        } catch (Exception e) {
-//        return ResponseEntity.status(500).build();
-//        }
-//    }
-
-    //@PostMapping("/article-add")
-    //public ResponseEntity<?> addArticle(@RequestBody Article article)throws IOException {
-    //    System.out.println(article);
-    //    try {
-    //        ResponseEntity<Object> addedArticle = articleService.addArticle(article);
-    //        return ResponseEntity.ok(addedArticle);
-    //    } catch (Exception e) {
-    //        String errorMessage = "Erreur lors de l'ajout de l'article : " + e.getMessage();
-    //        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-    //    }
-    //}
-
-    @PostMapping("/article-add")
-public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOException {
-    try {
-        System.out.println("Données reçues: " + article);
-        ResponseEntity<Object> addedArticle = articleService.addArticle(article);
-        return ResponseEntity.ok(addedArticle);
-    } catch (Exception e) {
-        String errorMessage = "Erreur lors de l'ajout de l'article : " + e.getMessage();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-    }
-}
-
-///////////////    
     @PostMapping("/createArticle")
     @Operation(
             summary = "Create a new article",
@@ -106,8 +70,16 @@ public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOExcep
     @PutMapping("/article/{id}")
     public ResponseEntity<?> updateArticle(@PathVariable Long id, @RequestBody Article updatedArticle) {
         try {
+            Article existingArticle = articleService.getArticleById(id);
+            if (existingArticle == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Article not found with id: " + id);
+            }
+    
+            // Assurez-vous que le code reste inchangé
             updatedArticle.setId(id);
-            updatedArticle.setStatus(null);
+            updatedArticle.setCode(existingArticle.getCode()); 
+            updatedArticle.setStatus(null); // si nécessaire
+    
             Article result = articleService.updateArticle(id, updatedArticle);
             return ResponseEntity.ok(result);
         } catch (EntityNotFoundException e) {
@@ -116,7 +88,21 @@ public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOExcep
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating article: " + e.getMessage());
         }
     }
-
+    
+    @GetMapping("/article/code/{code}")
+    public ResponseEntity<?> getArticleByCode(@PathVariable String code) {
+        try {
+            Article article = articleService.getArticleByCode(code);
+            if (article != null) {
+                return ResponseEntity.ok(article);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aucun article trouvé pour ce code.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    
 
     @GetMapping("/articles")
     public ResponseEntity<?> getArticlePage(
@@ -151,7 +137,18 @@ public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOExcep
             log.info(e.getLocalizedMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }  
+      @PostMapping("/article-add")
+public ResponseEntity<?> addArticle(@RequestBody Article article) throws IOException {
+    try {
+        System.out.println("Données reçues: " + article);
+        ResponseEntity<Object> addedArticle = articleService.addArticle(article);
+        return ResponseEntity.ok(addedArticle);
+    } catch (Exception e) {
+        String errorMessage = "Erreur lors de l'ajout de l'article : " + e.getMessage();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
+}
 }
 
 

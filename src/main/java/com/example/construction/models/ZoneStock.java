@@ -20,6 +20,7 @@ public class ZoneStock extends Generique{
     private String designation;
     private String description;
     private int status = 0;
+    private String adresse;
 
 //    // Méthode pour la suppression logique
 //    public void softDelete() {

@@ -32,9 +32,9 @@ public class Fournisseur {
         this.status = 1;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "categorieFournisseur")
-    private CategorieFournisseur categorieFournisseur;
+    //@ManyToOne
+    //@JoinColumn(name = "categorieFournisseur")
+    //private CategorieFournisseur categorieFournisseur;
 
     @ManyToOne
     @JoinColumn(name = "typeFournisseur", referencedColumnName = "id")

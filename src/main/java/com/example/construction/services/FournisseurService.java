@@ -27,8 +27,8 @@ public class FournisseurService {
         try {
             TypeFournisseur typeFournisseur = typeFournisseurRepository.findById(fournisseur.getTypeFournisseur().getId())
                     .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Type de fournisseur not found with id: " + fournisseur.getTypeFournisseur().getId()));
-            CategorieFournisseur categorieFournisseur = categorieFournisseurRepository.findById(fournisseur.getCategorieFournisseur().getId())
-                    .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Categorie de fournisseur not found with id: " + fournisseur.getCategorieFournisseur().getId()));
+            //CategorieFournisseur categorieFournisseur = categorieFournisseurRepository.findById(fournisseur.getCategorieFournisseur().getId())
+                    //.orElseThrow(() -> new javax.persistence.EntityNotFoundException("Categorie de fournisseur not found with id: " + fournisseur.getCategorieFournisseur().getId()));
             fournisseur.setAdresse(fournisseur.getAdresse());
             fournisseur.setEmail(fournisseur.getEmail());
             fournisseur.setNom(fournisseur.getNom());
@@ -36,7 +36,7 @@ public class FournisseurService {
             fournisseur.setTelephone(fournisseur.getTelephone());
             fournisseur.setTotalVersement(fournisseur.getTotalVersement());
             fournisseur.setTypeFournisseur(typeFournisseur);
-            fournisseur.setCategorieFournisseur(categorieFournisseur);
+            //fournisseur.setCategorieFournisseur(categorieFournisseur);
             Fournisseur savedFournisseur = fournisseurRepository.save(fournisseur);
             // Renvoyez une réponse contenant l'objet Article en cas de succès
             return ResponseEntity.ok().body(savedFournisseur);

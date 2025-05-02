@@ -18,6 +18,12 @@ public interface ArticleRepository extends JpaRepository<Article , Long> {
 
     Optional<Article> findByDesignation(String designation); // Recherche un article par son nom
 
-    List<Article> findAllByIdIn(List<Long> ids);  // Notez que 'id' ici est de type Long
+    List<Article> findAllByIdIn(List<Long> ids);  
+
+    Optional<Article> findByCode(String code);
+
+    boolean existsByCode(String code);
+
+
 
 }
