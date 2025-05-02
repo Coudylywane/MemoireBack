@@ -1,6 +1,7 @@
 package com.example.construction.services;
 
 import com.example.construction.dto.DevisDto;
+import com.example.construction.dto.DtoProjet;
 import com.example.construction.models.*;
 import com.example.construction.models.enumeration.DevisStatus;
 import com.example.construction.repositories.*;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +36,7 @@ public class DevisService {
 
         // Associer le devis au projet
         devis.setProjet(projet);
+        devis.setDateCreation(LocalDate.now());
 
         // Vérifier et associer les articles existants
         for (LigneDevis ligne : devis.getLignesDevis()) {
@@ -62,15 +66,21 @@ public class DevisService {
         return devisList.stream().map(devis -> {
             DevisDto dto = new DevisDto();
             dto.setId(devis.getId());
+            dto.setMontant(BigDecimal.valueOf(devis.getTotal()));
             dto.setDateCreation(devis.getDateCreation());
             dto.setStatut(devis.getStatut());
             // Check if planning exists
             Planning planning = planningRepository.findByDevisId(devis.getId());
             dto.setPlanningId(planning != null ? planning.getId() : null);
+            // Mapper Projet vers ProjetDto
+            DtoProjet projetDto = new DtoProjet();
+            Projet projet = devis.getProjet();
+            projetDto.setId(projet.getId());
+            projetDto.setClientId(projet.getClient() != null ? projet.getClient().getId() : null);
+            dto.setProjet(projetDto);
             return dto;
         }).collect(Collectors.toList());
     }
-
 
 //    public List<Devis> obtenirTousLesDevis() {
 //        return devisRepository.findAll();
@@ -119,7 +129,26 @@ public class DevisService {
         return devisRepository.save(devis);
     }
 
-    // Fetch devis by projetId
+    public List<DevisDto> getDevisByClientId(Long clientId) {
+        List<Devis> devisList = devisRepository.findByClientId(clientId);
+        return devisList.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    private DevisDto convertToDto(Devis devis) {
+        DevisDto dto = new DevisDto();
+        dto.setId(devis.getId());
+        dto.setMontant(BigDecimal.valueOf(devis.getTotal()));
+        dto.setDateCreation(devis.getDateCreation());
+        dto.setStatut(devis.getStatut());
+        Planning planning = planningRepository.findByDevisId(devis.getId());
+        dto.setPlanningId(planning != null ? planning.getId() : null);
+        DtoProjet projetDto = new DtoProjet();
+        Projet projet = devis.getProjet();
+        projetDto.setId(projet.getId());
+        projetDto.setClientId(projet.getClient() != null ? projet.getClient().getId() : null);
+        dto.setProjet(projetDto);
+        return dto;
+    }
 
 
 }

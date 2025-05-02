@@ -34,7 +34,7 @@ public class Tache {
     private TaskStatus status ; // Par exemple : "À faire", "En cours", "Terminée"
     private int pourcentageExecution; // Pourcentage d'exécution (0 à 100)
     @ManyToOne
-    @JoinColumn(name = "planning_id", nullable = false)
+    @JoinColumn(name = "planning_id", nullable = true)
     private Planning planning;
     @OneToMany(mappedBy = "tache", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjetTache> projetTaches = new HashSet<>();

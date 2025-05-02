@@ -107,6 +107,12 @@ public class DevisController {
                 .collect(Collectors.toList());
     }
 
+
+    @GetMapping("/client/{clientId}")
+    public List<DevisDto> getDevisByClientId(@PathVariable Long clientId) {
+        return devisService.getDevisByClientId(clientId);
+    }
+
 //    @PutMapping("/{devisId}/prix-reels")
 //    public ResponseEntity<Devis> mettreAJourPrixReels(
 //            @PathVariable Long devisId,

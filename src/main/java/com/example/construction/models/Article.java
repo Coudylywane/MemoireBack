@@ -1,14 +1,13 @@
 package com.example.construction.models;
 
-import javax.persistence.*;
-
 import com.example.construction.models.enumeration.StatusArticle;
-import com.example.construction.models.enumeration.StatusCommande;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,28 +43,19 @@ public class Article {
     private StatusArticle status = StatusArticle.DISPONIBLE;
 
     @Column(name = "prixReel", nullable = false)
-    private Double prixReel; // Le prix réel de l'article
+    private Double prixReel;
 
     @Column(name = "prixDevis", nullable = false)
-    private Double prixDevis; // Le prix dans le devis (peut être différent du prix réel)
+    private Double prixDevis;
 
-    // Quantité de l'article pour calculer le prix total
     @Column(nullable = false)
     private Integer quantity;
 
-
-    // La quantite seuil qui vient verifier  le reste 
     @Column(nullable = true)
     private Integer quantiteSeuil;
 
-    // Prix total pour cet article basé sur la quantité et le prix du devis
     @Transient
     private Double totalPrice;
-
-    // Méthode pour supprimer l'article sans le supprimer de la base de données
-    //public void softDelete() {
-        //this.status = "Archive";
-    //}
 
     @ManyToOne
     @JoinColumn(name = "zoneStock", referencedColumnName = "id")
@@ -82,8 +72,10 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "fournisseur", referencedColumnName = "id")
     private Fournisseur fournisseur;
-    
-    // Calcul du prix total en fonction du prix du devis et de la quantité
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TacheArticle> tacheArticles;
+
     @PrePersist
     @PreUpdate
     public void calculateTotalPrice() {
